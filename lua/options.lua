@@ -16,8 +16,32 @@ vim.opt.signcolumn = "yes:2"
 -- Fix jump cursor forward
 vim.keymap.set("n", "<Esc>f", "w", { desc = "Move word forward" })
 
--- Copy/paste in visual mode
-vim.keymap.set("v", "<C-c>", '"+y', { desc = "Copy to system clipboard" })
+-- Enable mouse support for native-like selection
+vim.opt.mouse = "a"
+vim.opt.mousefocus = true
+
+-- System clipboard integration
+vim.opt.clipboard = "unnamedplus"
+
+-- Native-like copy/paste/cut shortcuts
+-- Copy
 vim.keymap.set("v", "<D-c>", '"+y', { desc = "Copy to system clipboard" })
--- vim.keymap.set('i', '<C-v>', '"+p', { desc = 'Paste from system clipboard' })
+vim.keymap.set("v", "<C-c>", '"+y', { desc = "Copy to system clipboard" })
+
+-- Paste
+vim.keymap.set("n", "<D-v>", '"+p', { desc = "Paste from system clipboard" })
+vim.keymap.set("i", "<D-v>", '<C-r>+', { desc = "Paste from system clipboard" })
+vim.keymap.set("c", "<D-v>", '<C-r>+', { desc = "Paste from system clipboard" })
+vim.keymap.set("v", "<D-v>", '"+p', { desc = "Paste from system clipboard" })
+
+-- Cut
+vim.keymap.set("v", "<D-x>", '"+d', { desc = "Cut to system clipboard" })
+vim.keymap.set("v", "<C-x>", '"+d', { desc = "Cut to system clipboard" })
+
+-- Select all
+vim.keymap.set("n", "<D-a>", "ggVG", { desc = "Select all" })
+
+-- Better visual mode behavior
+vim.keymap.set("v", "<", "<gv", { desc = "Indent and reselect" })
+vim.keymap.set("v", ">", ">gv", { desc = "Unindent and reselect" })
 

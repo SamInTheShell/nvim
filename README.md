@@ -26,4 +26,12 @@ Go to `iTerm2 > Settings... > Appearance > Theme` select `Minimal`.
 
 Open `nvim` in the terminal.
 
+Some manual Mason installation is necessary.
+```
+:MasonInstall stylua
+:MasonInstall prettier
+:MasonInstall black
+:MasonInstall isort
+```
+
 Done.
