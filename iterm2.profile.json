@@ -170,7 +170,7 @@
   },
   "Silence Bell" : false,
   "Rows" : 25,
-  "Guid" : "4D09CBB2-16FA-48CC-9670-97099AE941C4",
+  "Guid" : "F4B33C0F-2FD3-4108-80C4-088225118B87",
   "Ansi 14 Color (Dark)" : {
     "Red Component" : 0.37597531080245972,
     "Color Space" : "sRGB",
@@ -346,7 +346,7 @@
     "Alpha Component" : 1,
     "Green Component" : 0.55789834260940552
   },
-  "Description" : "SamInTheShell/nvim",
+  "Description" : "SamInTheShell\/nvim",
   "Ansi 7 Color (Dark)" : {
     "Red Component" : 0.7810397744178772,
     "Color Space" : "sRGB",
@@ -453,6 +453,7 @@
     "Alpha Component" : 1,
     "Green Component" : 0.8833775520324707
   },
+  "Icon" : 0,
   "Bold Color (Light)" : {
     "Red Component" : 0.062745098039215685,
     "Color Space" : "sRGB",
@@ -489,6 +490,7 @@
     "Alpha Component" : 0.25,
     "Green Component" : 0.77217715978622437
   },
+  "Title Components" : 4,
   "Custom Directory" : "No",
   "ASCII Anti Aliased" : true,
   "Shortcut" : "",
