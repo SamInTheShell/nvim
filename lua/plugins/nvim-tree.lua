@@ -32,11 +32,14 @@ return {
       },
     })
 
-    -- Auto-open NvimTree on startup and focus editor
+    -- Auto-open NvimTree only when no file is provided
     vim.api.nvim_create_autocmd("VimEnter", {
       callback = function()
-        require("nvim-tree.api").tree.open()
-        vim.cmd("wincmd l")  -- Focus right window (editor)
+        -- Only open tree if no arguments were passed (no files specified)
+        if vim.fn.argc() == 0 then
+          require("nvim-tree.api").tree.open()
+          vim.cmd("wincmd l")  -- Focus right window (editor)
+        end
       end,
     })
 
