@@ -45,3 +45,15 @@ vim.keymap.set("n", "<D-a>", "ggVG", { desc = "Select all" })
 vim.keymap.set("v", "<", "<gv", { desc = "Indent and reselect" })
 vim.keymap.set("v", ">", ">gv", { desc = "Unindent and reselect" })
 
+-- Fix Go comment block auto-indent
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "go",
+  callback = function()
+    -- Add 'r' and 'o' to formatoptions for Go files:
+    -- r: Insert comment leader when pressing Enter in Insert mode  
+    -- o: Insert comment leader when using 'o' or 'O' in Normal mode
+    -- This enables auto-indent continuation in /* */ comment blocks
+    vim.opt_local.formatoptions:append("ro")
+  end,
+})
+
