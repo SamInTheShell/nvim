@@ -11,6 +11,7 @@ Just install all nerd fonts `brew search '/font-.*-nerd-font/' | awk '{ print $1
 Install NeoVim `brew install neovim`
 
 Clone the config.
+
 ```
 mkdir -p ~/.config && cd $_
 git clone git@github.com:samintheshell/nvim.git
@@ -27,11 +28,13 @@ Go to `iTerm2 > Settings... > Appearance > Theme` select `Minimal`.
 Open `nvim` in the terminal.
 
 Some manual Mason installation is necessary.
+
 ```
 :MasonInstall stylua
 :MasonInstall prettier
 :MasonInstall black
 :MasonInstall isort
+:MasonInstall goimports
 ```
 
 Done.
