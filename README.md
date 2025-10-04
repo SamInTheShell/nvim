@@ -62,6 +62,10 @@ In visual mode, use `c` to cut selected text.
 
 In normal mode, use `p` to paste copied text.
 
+In normal mode, use `0` to jump to front of line.
+
+In normal mode, use `$` to jump to end of line.
+
 The `<leader>` key is mapped to spacebar, this is important to know when viewing key bindings.
 
 Press these keys in order to open the full keymap: `<leader>fk`
