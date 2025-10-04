@@ -14,6 +14,9 @@ return {
 		-- optionally enable 24-bit colour
 		vim.opt.termguicolors = true
 
+		-- Variable to track tree width (needs to be declared before on_attach)
+		local saved_tree_width = 35 -- Default width, will be updated when user resizes
+
 		-- Custom on_attach function to handle alpha closing
 		local function on_attach(bufnr)
 			local api = require("nvim-tree.api")
@@ -29,6 +32,10 @@ return {
 			local function close_alpha_and_open_file(open_fn)
 				return function()
 					local node = api.tree.get_node_under_cursor()
+					-- Get current nvim-tree window and width before opening file
+					local tree_win = vim.api.nvim_get_current_win()
+					local current_tree_width = vim.api.nvim_win_get_width(tree_win)
+					
 					-- Only close alpha if we're opening a file, not a folder
 					if node and node.type == "file" then
 						-- Check if alpha is visible and close it
@@ -42,6 +49,13 @@ return {
 					end
 					-- Then perform the original action
 					open_fn()
+					
+					-- Restore nvim-tree width after opening file (if it's still a valid window)
+					if vim.api.nvim_win_is_valid(tree_win) and 
+					   require("nvim-tree.utils").is_nvim_tree_buf(vim.api.nvim_win_get_buf(tree_win)) then
+						vim.api.nvim_win_set_width(tree_win, current_tree_width)
+						saved_tree_width = current_tree_width -- Update saved width
+					end
 				end
 			end
 
@@ -57,18 +71,22 @@ return {
 				opts("Open: Horizontal Split")
 			)
 			vim.keymap.set("n", "t", close_alpha_and_open_file(api.node.open.tab), opts("Open: New Tab"))
-			
+
 			-- Add width resize keymaps (only for nvim-tree)
 			vim.keymap.set("n", ">", function()
 				local win = vim.api.nvim_get_current_win()
 				local current_width = vim.api.nvim_win_get_width(win)
-				vim.api.nvim_win_set_width(win, current_width + 5)
+				local new_width = current_width + 5
+				vim.api.nvim_win_set_width(win, new_width)
+				saved_tree_width = new_width -- Update saved width
 			end, opts("Increase Width"))
-			
+
 			vim.keymap.set("n", "<", function()
 				local win = vim.api.nvim_get_current_win()
 				local current_width = vim.api.nvim_win_get_width(win)
-				vim.api.nvim_win_set_width(win, math.max(10, current_width - 5)) -- Minimum width of 10
+				local new_width = math.max(10, current_width - 5) -- Minimum width of 10
+				vim.api.nvim_win_set_width(win, new_width)
+				saved_tree_width = new_width -- Update saved width
 			end, opts("Decrease Width"))
 		end
 
@@ -108,7 +126,6 @@ return {
 		-- Re-open Alpha when only NvimTree is left instead of closing
 		-- Add a flag to prevent recursive trap during quit sequence
 		local quitting = false
-		local saved_tree_width = 60 -- Default width, will be updated when user resizes
 
 		-- Track nvim-tree width when there are multiple windows
 		vim.api.nvim_create_autocmd("WinResized", {
