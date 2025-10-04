@@ -82,6 +82,9 @@ return {
       -- },
     }
 
+    -- Override the quit button's keymap to close nvim-tree first then quit
+    dashboard.section.bottom_buttons.val[1].opts.keymap[3] = "<cmd>lua if require('nvim-tree.view').is_visible() then require('nvim-tree.api').tree.close() end; vim.cmd('qa')<CR>"
+
     require("alpha").setup(dashboard.config)
   end,
 }

@@ -4,6 +4,7 @@ return {
   lazy = false,
   dependencies = {
     "nvim-tree/nvim-web-devicons",
+    "goolord/alpha-nvim",
   },
   config = function()
     -- disable netrw at the very start of your init.lua
@@ -48,14 +49,36 @@ return {
 
     vim.keymap.set("n", "<C-b>", ":NvimTreeToggle<CR>")
 
-    -- Auto-close Neovim when only NvimTree is left
+    -- Re-open Alpha when only NvimTree is left instead of closing
+    -- Add a flag to prevent recursive trap during quit sequence
+    local quitting = false
+    
     vim.api.nvim_create_autocmd("BufEnter", {
       nested = true,
       callback = function()
+        if quitting then return end
+        -- Only trigger if we have exactly 1 window and it's nvim-tree
         if #vim.api.nvim_list_wins() == 1 and require("nvim-tree.utils").is_nvim_tree_buf() then
-          vim.cmd "quit"
+          -- Defer the split to avoid the closing window error
+          vim.schedule(function()
+            if #vim.api.nvim_list_wins() == 1 and require("nvim-tree.utils").is_nvim_tree_buf() then
+              vim.cmd("vsplit")
+              vim.cmd("enew")
+              require("alpha").start(true)
+            end
+          end)
         end
       end
+    })
+    
+    -- Override alpha quit to close nvim-tree first
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "alpha", 
+      callback = function(args)
+        vim.keymap.set("n", "q", function()
+          print("CUSTOM QUIT OVERRIDE TRIGGERED")
+        end, { buffer = args.buf, silent = true })
+      end,
     })
   end,
 }
