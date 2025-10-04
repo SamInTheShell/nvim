@@ -8,22 +8,18 @@ vim.opt.signcolumn = "yes:2"
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
--- Terminal-like keybindings for insert mode
--- Delete last word from normal mode
--- vim.keymap.set('n', '<C-w>', 'i<C-w>', { desc = 'Delete word backward' })
-
--- Jump cursor backwards already works
--- vim.keymap.set('n', '<M-Left>', '<C-Left>', { desc = 'Move word backward' })
-
--- Fix jump cursor forward
-vim.keymap.set("n", "<Esc>f", "w", { desc = "Move word forward" })
-
 -- Enable mouse support for native-like selection
 vim.opt.mouse = "a"
 vim.opt.mousefocus = true
 
 -- System clipboard integration
 vim.opt.clipboard = "unnamedplus"
+
+-- Command-line completion
+vim.opt.wildmenu = true
+vim.opt.wildmode = "longest:full,full"
+vim.opt.wildoptions = "pum"
+vim.opt.pumheight = 10
 
 -- New panels
 vim.keymap.set("n", "<leader>n", ":new<CR>", { desc = "New window below current" })
