@@ -112,33 +112,34 @@ return {
 		vim.api.nvim_create_autocmd("FileType", {
 			pattern = "alpha",
 			callback = function(args)
-				-- Create custom commands instead of abbreviations to avoid premature expansion
-				vim.api.nvim_buf_create_user_command(args.buf, "Q", function()
-					if require("nvim-tree.view").is_visible() then
-						require("nvim-tree.api").tree.close()
-					end
-					vim.cmd("qa")
-				end, {})
-
-				-- Override the q command specifically for this buffer
+				-- Override Enter key but only for q and q! commands, let everything else through
 				vim.keymap.set("c", "<CR>", function()
 					local cmdline = vim.fn.getcmdline()
 					if cmdline == "q" then
-						vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-u>", true, false, true), "n", false)
+						-- Clear command line and execute our custom quit
+						vim.api.nvim_feedkeys(
+							vim.api.nvim_replace_termcodes("<C-u><Esc>", true, false, true),
+							"n",
+							false
+						)
 						if require("nvim-tree.view").is_visible() then
 							require("nvim-tree.api").tree.close()
 						end
 						vim.cmd("qa")
-						return ""
 					elseif cmdline == "q!" then
-						vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-u>", true, false, true), "n", false)
+						-- Clear command line and execute our custom force quit
+						vim.api.nvim_feedkeys(
+							vim.api.nvim_replace_termcodes("<C-u><Esc>", true, false, true),
+							"n",
+							false
+						)
 						if require("nvim-tree.view").is_visible() then
 							require("nvim-tree.api").tree.close()
 						end
 						vim.cmd("qa!")
-						return ""
 					else
-						return vim.api.nvim_replace_termcodes("<CR>", true, false, true)
+						-- For all other commands, execute normally
+						vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, false, true), "n", false)
 					end
 				end, { buffer = args.buf })
 			end,
