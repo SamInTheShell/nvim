@@ -57,6 +57,19 @@ return {
 				opts("Open: Horizontal Split")
 			)
 			vim.keymap.set("n", "t", close_alpha_and_open_file(api.node.open.tab), opts("Open: New Tab"))
+			
+			-- Add width resize keymaps (only for nvim-tree)
+			vim.keymap.set("n", ">", function()
+				local win = vim.api.nvim_get_current_win()
+				local current_width = vim.api.nvim_win_get_width(win)
+				vim.api.nvim_win_set_width(win, current_width + 5)
+			end, opts("Increase Width"))
+			
+			vim.keymap.set("n", "<", function()
+				local win = vim.api.nvim_get_current_win()
+				local current_width = vim.api.nvim_win_get_width(win)
+				vim.api.nvim_win_set_width(win, math.max(10, current_width - 5)) -- Minimum width of 10
+			end, opts("Decrease Width"))
 		end
 
 		-- OR setup with some options
@@ -65,7 +78,7 @@ return {
 				sorter = "case_sensitive",
 			},
 			view = {
-				width = 60,
+				width = 35,
 			},
 			renderer = {
 				group_empty = true,
