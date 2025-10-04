@@ -56,15 +56,39 @@ In normal mode, use `w`, `b`, `j`, and `k` to move around, jumping over words an
 
 In normal mode, use `v` to select text.
 
+In normal mode, use `V` to select lines.
+
 In visual mode, use `y` to copy selected text.
 
 In visual mode, use `c` to cut selected text.
 
-In normal mode, use `p` to paste copied text.
+In normal mode, use `P` to paste copied text before.
 
-In normal mode, use `0` to jump to front of line.
+In normal mode, use `p` to paste copied text after.
 
-In normal mode, use `$` to jump to end of line.
+In normal mode, use `I` to insert at start of line.
+
+In normal mode, use `gI` to insert at start of line, ignoring indentation.
+
+In normal mode, use `A` to insert at end of line.
+
+In normal mode, use `gg` to jump to first line of file.
+
+In normal mode, use `G` to jump to end line of file.
+
+In normal mode, use `o` to start a new line below the current line.
+
+In normal mode, use `O` to start a new line above the current line.
+
+In normal mode, use `J` to join the current line with the next one.
+
+In normal mode, use `u` to undo last change.
+
+In normal mode, use `Ctrl + r` to redo last change.
+
+In normal mode, use `>` to indent text.
+
+In normal mode, use `<` to dedent text.
 
 The `<leader>` key is mapped to spacebar, this is important to know when viewing key bindings.
 
@@ -76,7 +100,7 @@ In normal mode, use `:terminal` will replace the current window with a terminal 
 
 In normal mode, press `i` to enter insert mode to use the terminal.
 
-Press `<CTRL>+\` followed by `<CTRL>+n` to get back to normal mode.
+Press `Ctrl + \` followed by `Ctrl + n` to get back to normal mode.
 
 In normal mode, use `:w somefilename.txt` to save the buffered terminal to a file.
 
@@ -84,4 +108,16 @@ In normal mode, use `:w somefilename.txt` to save the buffered terminal to a fil
 
 Sometimes things like Mason or Lazy or Telescope windows are in the way.
 
-They can typically be cleared by just spamming `ESCAPE` or `CTLR+C`.
+They can typically be cleared by just spamming `Escape` or `Ctrl + c`.
+
+## Multiline Editing
+
+Move the cursor to where you want the cursor to be lined up.
+
+In normal mode, use `Ctrl + v` to enable vertical block selection.
+
+Press `I` to go into insert mode.
+
+Make your changes. They will only show on the first line.
+
+Escape insert mode and the changes will be applied to all the selected lines.
