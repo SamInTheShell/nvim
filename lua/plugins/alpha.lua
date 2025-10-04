@@ -108,14 +108,39 @@ return {
 
 		require("alpha").setup(dashboard.config)
 
-		-- Remap :q to :qa when alpha buffer is in focus
+		-- Remap :q and :q! to work properly when alpha buffer is in focus
 		vim.api.nvim_create_autocmd("FileType", {
 			pattern = "alpha",
-			callback = function()
-				-- Create command abbreviation for q -> qa in alpha buffer
-				vim.cmd(
-					"cnoreabbrev <buffer> q lua if require('nvim-tree.view').is_visible() then require('nvim-tree.api').tree.close() end; vim.cmd('qa')"
-				)
+			callback = function(args)
+				-- Create custom commands instead of abbreviations to avoid premature expansion
+				vim.api.nvim_buf_create_user_command(args.buf, "Q", function()
+					if require("nvim-tree.view").is_visible() then
+						require("nvim-tree.api").tree.close()
+					end
+					vim.cmd("qa")
+				end, {})
+
+				-- Override the q command specifically for this buffer
+				vim.keymap.set("c", "<CR>", function()
+					local cmdline = vim.fn.getcmdline()
+					if cmdline == "q" then
+						vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-u>", true, false, true), "n", false)
+						if require("nvim-tree.view").is_visible() then
+							require("nvim-tree.api").tree.close()
+						end
+						vim.cmd("qa")
+						return ""
+					elseif cmdline == "q!" then
+						vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-u>", true, false, true), "n", false)
+						if require("nvim-tree.view").is_visible() then
+							require("nvim-tree.api").tree.close()
+						end
+						vim.cmd("qa!")
+						return ""
+					else
+						return vim.api.nvim_replace_termcodes("<CR>", true, false, true)
+					end
+				end, { buffer = args.buf })
 			end,
 		})
 	end,
