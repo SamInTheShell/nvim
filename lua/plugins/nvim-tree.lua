@@ -14,8 +14,41 @@ return {
     -- optionally enable 24-bit colour
     vim.opt.termguicolors = true
 
-    -- empty setup using defaults
-    require("nvim-tree").setup()
+    -- Custom on_attach function to handle alpha closing
+    local function on_attach(bufnr)
+      local api = require "nvim-tree.api"
+      
+      local function opts(desc)
+        return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+      end
+      
+      -- Apply default mappings first
+      api.config.mappings.default_on_attach(bufnr)
+      
+      -- Function to close alpha before opening file
+      local function close_alpha_and_open(open_fn)
+        return function()
+          -- Check if alpha is visible and close it
+          for _, win in ipairs(vim.api.nvim_list_wins()) do
+            local buf = vim.api.nvim_win_get_buf(win)
+            if vim.api.nvim_buf_get_option(buf, 'filetype') == 'alpha' then
+              vim.api.nvim_win_close(win, false)
+              break
+            end
+          end
+          -- Then open the file
+          open_fn()
+        end
+      end
+      
+      -- Override file opening keymaps to close alpha first
+      vim.keymap.set('n', '<CR>', close_alpha_and_open(api.node.open.edit), opts('Open'))
+      vim.keymap.set('n', 'o', close_alpha_and_open(api.node.open.edit), opts('Open'))
+      vim.keymap.set('n', '<2-LeftMouse>', close_alpha_and_open(api.node.open.edit), opts('Open'))
+      vim.keymap.set('n', 'v', close_alpha_and_open(api.node.open.vertical), opts('Open: Vertical Split'))
+      vim.keymap.set('n', 'h', close_alpha_and_open(api.node.open.horizontal), opts('Open: Horizontal Split'))
+      vim.keymap.set('n', 't', close_alpha_and_open(api.node.open.tab), opts('Open: New Tab'))
+    end
 
     -- OR setup with some options
     require("nvim-tree").setup({
@@ -34,6 +67,7 @@ return {
       filesystem_watchers = {
         enable = true,
       },
+      on_attach = on_attach,
     })
 
     -- Auto-open NvimTree only when no file is provided
