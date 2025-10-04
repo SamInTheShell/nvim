@@ -35,7 +35,7 @@ return {
 					-- Get current nvim-tree window and width before opening file
 					local tree_win = vim.api.nvim_get_current_win()
 					local current_tree_width = vim.api.nvim_win_get_width(tree_win)
-					
+
 					-- Only close alpha if we're opening a file, not a folder
 					if node and node.type == "file" then
 						-- Check if alpha is visible and close it
@@ -49,10 +49,12 @@ return {
 					end
 					-- Then perform the original action
 					open_fn()
-					
+
 					-- Restore nvim-tree width after opening file (if it's still a valid window)
-					if vim.api.nvim_win_is_valid(tree_win) and 
-					   require("nvim-tree.utils").is_nvim_tree_buf(vim.api.nvim_win_get_buf(tree_win)) then
+					if
+						vim.api.nvim_win_is_valid(tree_win)
+						and require("nvim-tree.utils").is_nvim_tree_buf(vim.api.nvim_win_get_buf(tree_win))
+					then
 						vim.api.nvim_win_set_width(tree_win, current_tree_width)
 						saved_tree_width = current_tree_width -- Update saved width
 					end
@@ -174,7 +176,10 @@ return {
 			pattern = "alpha",
 			callback = function(args)
 				vim.keymap.set("n", "q", function()
-					print("CUSTOM QUIT OVERRIDE TRIGGERED")
+					if require("nvim-tree.view").is_visible() then
+						require("nvim-tree.api").tree.close()
+					end
+					vim.cmd("qa")
 				end, { buffer = args.buf, silent = true })
 			end,
 		})

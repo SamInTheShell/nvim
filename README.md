@@ -65,3 +65,19 @@ In normal mode, use `p` to paste copied text.
 The `<leader>` key is mapped to spacebar, this is important to know when viewing key bindings.
 
 Press these keys in order to open the full keymap: `<leader>fk`
+
+## Terminals
+
+In normal mode, use `:terminal` will replace the current window with a terminal session.
+
+In normal mode, press `i` to enter insert mode to use the terminal.
+
+Press `<CTRL>+\` followed by `<CTRL>+n` to get back to normal mode.
+
+In normal mode, use `:w somefilename.txt` to save the buffered terminal to a file.
+
+## Clearing Popup Windows
+
+Sometimes things like Mason or Lazy or Telescope windows are in the way.
+
+They can typically be cleared by just spamming `ESCAPE` or `CTLR+C`.
