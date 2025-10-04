@@ -30,6 +30,9 @@ return {
       filters = {
         dotfiles = true,
       },
+      filesystem_watchers = {
+        enable = true,
+      },
     })
 
     -- Auto-open NvimTree only when no file is provided
