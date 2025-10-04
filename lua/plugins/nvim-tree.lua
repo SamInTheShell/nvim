@@ -158,9 +158,9 @@ return {
 					vim.schedule(function()
 						if #vim.api.nvim_list_wins() == 1 and require("nvim-tree.utils").is_nvim_tree_buf() then
 							local tree_win = vim.api.nvim_get_current_win()
-							vim.cmd("vsplit")
-							vim.cmd("enew")
-							require("alpha").start(true)
+							-- Create new window and let alpha handle everything
+							vim.cmd("vsplit | wincmd l")
+							require("alpha").start()
 							-- Restore nvim-tree width to saved width
 							vim.api.nvim_win_set_width(tree_win, saved_tree_width)
 						end
