@@ -1,102 +1,122 @@
 return {
-  "goolord/alpha-nvim",
-  -- dependencies = { 'echasnovski/mini.icons' },
-  dependencies = { "nvim-tree/nvim-web-devicons" },
-  config = function()
-    local dashboard = require("alpha.themes.startify")
-    dashboard.file_icons.provider = "devicons"
+	"goolord/alpha-nvim",
+	-- dependencies = { 'echasnovski/mini.icons' },
+	dependencies = { "nvim-tree/nvim-web-devicons" },
+	config = function()
+		local dashboard = require("alpha.themes.startify")
+		dashboard.file_icons.provider = "devicons"
 
-    -- Function to interpolate between two colors
-    local function lerp_color(color1, color2, t)
-      local r1, g1, b1 =
-          tonumber(color1:sub(2, 3), 16), tonumber(color1:sub(4, 5), 16), tonumber(color1:sub(6, 7), 16)
-      local r2, g2, b2 =
-          tonumber(color2:sub(2, 3), 16), tonumber(color2:sub(4, 5), 16), tonumber(color2:sub(6, 7), 16)
-      local r = math.floor(r1 + (r2 - r1) * t)
-      local g = math.floor(g1 + (g2 - g1) * t)
-      local b = math.floor(b1 + (b2 - b1) * t)
-      return string.format("#%02x%02x%02x", r, g, b)
-    end
+		-- Function to interpolate between two colors
+		local function lerp_color(color1, color2, t)
+			local r1, g1, b1 =
+				tonumber(color1:sub(2, 3), 16), tonumber(color1:sub(4, 5), 16), tonumber(color1:sub(6, 7), 16)
+			local r2, g2, b2 =
+				tonumber(color2:sub(2, 3), 16), tonumber(color2:sub(4, 5), 16), tonumber(color2:sub(6, 7), 16)
+			local r = math.floor(r1 + (r2 - r1) * t)
+			local g = math.floor(g1 + (g2 - g1) * t)
+			local b = math.floor(b1 + (b2 - b1) * t)
+			return string.format("#%02x%02x%02x", r, g, b)
+		end
 
-    local header_lines = {
-      [[    ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ]],
-      [[ ██╗████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ]],
-      [[ ╚═╝██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ]],
-      [[ ██╗██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ]],
-      [[ ╚═╝██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ]],
-      [[    ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ]],
-    }
+		-- Read ASCII art from external file
+		local header_file = vim.fn.stdpath("config") .. "/ascii_header.txt"
+		local header_lines = {}
 
-    dashboard.section.header.val = header_lines
+		local file = io.open(header_file, "r")
+		if file then
+			for line in file:lines() do
+				table.insert(header_lines, line)
+			end
+			file:close()
+		else
+			-- Fallback header if file doesn't exist
+			header_lines = { "nvim" }
+		end
 
-    -- Create gradient highlight groups and mapping
-    local start_color = "#00FFFF" -- Cyan (top-left)
-    local end_color = "#FF00FF" -- Magenta (bottom-right)
-    local num_lines = #header_lines
-    local max_width = 0
+		dashboard.section.header.val = header_lines
 
-    -- Find the maximum width
-    for _, line in ipairs(header_lines) do
-      max_width = math.max(max_width, #line)
-    end
+		-- Create gradient highlight groups and mapping
+		local start_color = "#00FFFF" -- Cyan (top-left)
+		local end_color = "#FF00FF" -- Magenta (bottom-right)
+		local num_lines = #header_lines
+		local max_width = 0
 
-    local highlights = {}
+		-- Find the maximum width
+		for _, line in ipairs(header_lines) do
+			max_width = math.max(max_width, #line)
+		end
 
-    -- Generate highlight groups and calculate positions
-    for row = 1, num_lines do
-      local line_highlights = {}
-      for col = 1, #header_lines[row] do
-        -- Calculate diagonal gradient position (0 to 1)
-        local row_progress = (row - 1) / (num_lines - 1)
-        local col_progress = (col - 1) / (max_width - 1)
-        local t = (row_progress + col_progress) / 2
-        local color = lerp_color(start_color, end_color, t)
-        local hl_name = string.format("AlphaGrad_%d_%d", row, col)
+		local highlights = {}
 
-        -- Create the highlight group
-        vim.cmd(string.format("hi %s guifg=%s", hl_name, color))
+		-- Generate highlight groups and calculate positions
+		for row = 1, num_lines do
+			local line_highlights = {}
+			for col = 1, #header_lines[row] do
+				-- Calculate diagonal gradient position (0 to 1)
+				local row_progress = (row - 1) / (num_lines - 1)
+				local col_progress = (col - 1) / (max_width - 1)
+				local t = (row_progress + col_progress) / 2
+				local color = lerp_color(start_color, end_color, t)
+				local hl_name = string.format("AlphaGrad_%d_%d", row, col)
 
-        -- Add to line highlights
-        table.insert(line_highlights, { hl_name, col - 1, col })
-      end
-      table.insert(highlights, line_highlights)
-    end
+				-- Create the highlight group
+				vim.cmd(string.format("hi %s guifg=%s", hl_name, color))
 
-    dashboard.section.header.opts.hl = highlights
+				-- Add to line highlights
+				table.insert(line_highlights, { hl_name, col - 1, col })
+			end
+			table.insert(highlights, line_highlights)
+		end
 
-    -- Filter MRU to only show files from current directory
-    local cwd = vim.fn.getcwd()
-    dashboard.section.mru.val = {
-      -- {
-      --   type = "text",
-      --   val = "Recent files",
-      --   opts = { hl = "SpecialComment", shrink_margin = false, position = "center" },
-      -- },
-      -- { type = "padding", val = 1 },
-      -- {
-      --   type = "group",
-      --   val = function()
-      --     return { dashboard.mru(0, cwd) }
-      --   end,
-      --   opts = { shrink_margin = false },
-      -- },
-    }
+		dashboard.section.header.opts.hl = highlights
 
-    -- Override the quit button's keymap to close nvim-tree first then quit
-    dashboard.section.bottom_buttons.val[1].opts.keymap[3] =
-    "<cmd>lua if require('nvim-tree.view').is_visible() then require('nvim-tree.api').tree.close() end; vim.cmd('qa')<CR>"
+		-- Filter MRU to only show files from current directory
+		local cwd = vim.fn.getcwd()
+		dashboard.section.mru.val = {
+			-- {
+			--   type = "text",
+			--   val = "Recent files",
+			--   opts = { hl = "SpecialComment", shrink_margin = false, position = "center" },
+			-- },
+			-- { type = "padding", val = 1 },
+			-- {
+			--   type = "group",
+			--   val = function()
+			--     return { dashboard.mru(0, cwd) }
+			--   end,
+			--   opts = { shrink_margin = false },
+			-- },
+		}
 
-    require("alpha").setup(dashboard.config)
+		-- Override the quit button's keymap and on_press to close nvim-tree first then quit
+		-- Find and fix the quit button (usually the last button)
+		for i, button in ipairs(dashboard.section.bottom_buttons.val) do
+			if button.val and (string.match(button.val:lower(), "quit") or string.match(button.val:lower(), "q")) then
+				local quit_command =
+					"<cmd>lua if require('nvim-tree.view').is_visible() then require('nvim-tree.api').tree.close() end; vim.cmd('qa')<CR>"
+				button.opts.keymap[3] = quit_command
+				-- Override on_press to execute the same command as the keymap
+				button.on_press = function()
+					if require("nvim-tree.view").is_visible() then
+						require("nvim-tree.api").tree.close()
+					end
+					vim.cmd("qa")
+				end
+				break
+			end
+		end
 
-    -- Remap :q to :qa when alpha buffer is in focus
-    vim.api.nvim_create_autocmd("FileType", {
-      pattern = "alpha",
-      callback = function()
-        -- Create command abbreviation for q -> qa in alpha buffer
-        vim.cmd(
-          "cnoreabbrev <buffer> q lua if require('nvim-tree.view').is_visible() then require('nvim-tree.api').tree.close() end; vim.cmd('qa')"
-        )
-      end,
-    })
-  end,
+		require("alpha").setup(dashboard.config)
+
+		-- Remap :q to :qa when alpha buffer is in focus
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = "alpha",
+			callback = function()
+				-- Create command abbreviation for q -> qa in alpha buffer
+				vim.cmd(
+					"cnoreabbrev <buffer> q lua if require('nvim-tree.view').is_visible() then require('nvim-tree.api').tree.close() end; vim.cmd('qa')"
+				)
+			end,
+		})
+	end,
 }
