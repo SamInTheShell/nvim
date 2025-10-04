@@ -27,3 +27,11 @@ vim.env.PATH = "/usr/bin:" .. vim.env.PATH
 -- Auto load plugins
 require("options")
 require("lazy").setup("plugins")
+
+-- Auto load commands
+local commands_dir = vim.fn.stdpath("config") .. "/lua/commands"
+for _, file in ipairs(vim.fn.readdir(commands_dir)) do
+	if file:match("%.lua$") then
+		require("commands." .. file:gsub("%.lua$", ""))
+	end
+end
