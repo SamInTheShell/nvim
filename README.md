@@ -50,4 +50,18 @@ nvim --headless \
 
 Open `nvim` in the terminal.
 
-Profit.
+## Basic Editing
+
+In normal mode, use `w`, `b`, `j`, and `k` to move around, jumping over words and switching lines.
+
+In normal mode, use `v` to select text.
+
+In visual mode, use `y` to copy selected text.
+
+In visual mode, use `c` to cut selected text.
+
+In normal mode, use `p` to paste copied text.
+
+The `<leader>` key is mapped to spacebar, this is important to know when viewing key bindings.
+
+Press these keys in order to open the full keymap: `<leader>fk`
