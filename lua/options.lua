@@ -30,10 +30,13 @@ vim.keymap.set("n", "<leader>rh", ":horizontal resize ")
 vim.keymap.set("n", "<leader>rv", ":vertical resize ")
 vim.keymap.set("n", "<leader>rs", ":vertical resize 60<CR>")
 
--- Native-like copy/paste/cut shortcuts
--- Copy
-vim.keymap.set("v", "<D-c>", '"+y', { desc = "Copy to system clipboard" })
-vim.keymap.set("v", "<C-c>", '"+y', { desc = "Copy to system clipboard" })
+-- Make y copy to system clipboard in addition to default behavior
+vim.keymap.set({ "n", "v" }, "y", function()
+	-- First do the normal yank
+	vim.cmd('normal! "' .. vim.v.register .. "y")
+	-- Then also copy to system clipboard
+	vim.fn.setreg("+", vim.fn.getreg(vim.v.register))
+end, { desc = "Yank to default register and system clipboard" })
 
 -- Paste
 vim.keymap.set("n", "<D-v>", '"+p', { desc = "Paste from system clipboard" })
