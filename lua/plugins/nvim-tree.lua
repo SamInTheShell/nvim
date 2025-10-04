@@ -52,19 +52,42 @@ return {
     -- Re-open Alpha when only NvimTree is left instead of closing
     -- Add a flag to prevent recursive trap during quit sequence
     local quitting = false
+    local saved_tree_width = 60 -- Default width, will be updated when user resizes
     
+    -- Track nvim-tree width when there are multiple windows
+    vim.api.nvim_create_autocmd("WinResized", {
+      callback = function()
+        if #vim.api.nvim_list_wins() > 1 then
+          for _, win in ipairs(vim.api.nvim_list_wins()) do
+            if require("nvim-tree.utils").is_nvim_tree_buf(vim.api.nvim_win_get_buf(win)) then
+              saved_tree_width = vim.api.nvim_win_get_width(win)
+              break
+            end
+          end
+        end
+      end
+    })
+
     vim.api.nvim_create_autocmd("BufEnter", {
       nested = true,
       callback = function()
         if quitting then return end
+        -- Save tree width when we have multiple windows
+        if #vim.api.nvim_list_wins() > 1 and require("nvim-tree.utils").is_nvim_tree_buf() then
+          saved_tree_width = vim.api.nvim_win_get_width(vim.api.nvim_get_current_win())
+        end
+        
         -- Only trigger if we have exactly 1 window and it's nvim-tree
         if #vim.api.nvim_list_wins() == 1 and require("nvim-tree.utils").is_nvim_tree_buf() then
           -- Defer the split to avoid the closing window error
           vim.schedule(function()
             if #vim.api.nvim_list_wins() == 1 and require("nvim-tree.utils").is_nvim_tree_buf() then
+              local tree_win = vim.api.nvim_get_current_win()
               vim.cmd("vsplit")
               vim.cmd("enew")
               require("alpha").start(true)
+              -- Restore nvim-tree width to saved width
+              vim.api.nvim_win_set_width(tree_win, saved_tree_width)
             end
           end)
         end
