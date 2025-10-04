@@ -86,5 +86,14 @@ return {
     dashboard.section.bottom_buttons.val[1].opts.keymap[3] = "<cmd>lua if require('nvim-tree.view').is_visible() then require('nvim-tree.api').tree.close() end; vim.cmd('qa')<CR>"
 
     require("alpha").setup(dashboard.config)
+
+    -- Remap :q to :qa when alpha buffer is in focus
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "alpha",
+      callback = function()
+        -- Create command abbreviation for q -> qa in alpha buffer
+        vim.cmd("cnoreabbrev <buffer> q lua if require('nvim-tree.view').is_visible() then require('nvim-tree.api').tree.close() end; vim.cmd('qa')")
+      end,
+    })
   end,
 }
