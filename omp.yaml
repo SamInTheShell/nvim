@@ -25,8 +25,7 @@ blocks:
   - type: prompt
     alignment: left
     segments:
-      - leading_diamond: 
-        trailing_diamond: 
+      - trailing_diamond: 
         template: " {{ if .SSHSession }} {{ end }}{{ .UserName }}@{{ .HostName }} "
         foreground: p:black
         background: p:blue
