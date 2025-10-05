@@ -76,17 +76,17 @@ return {
 		local cwd = vim.fn.getcwd()
 		dashboard.section.mru.val = {
 			-- {
-			--   type = "text",
-			--   val = "Recent files",
-			--   opts = { hl = "SpecialComment", shrink_margin = false, position = "center" },
+			--	 type = "text",
+			--	 val = "Recent files",
+			--	 opts = { hl = "SpecialComment", shrink_margin = false, position = "center" },
 			-- },
 			-- { type = "padding", val = 1 },
 			-- {
-			--   type = "group",
-			--   val = function()
-			--     return { dashboard.mru(0, cwd) }
-			--   end,
-			--   opts = { shrink_margin = false },
+			--	 type = "group",
+			--	 val = function()
+			--	   return { dashboard.mru(0, cwd) }
+			--	 end,
+			--	 opts = { shrink_margin = false },
 			-- },
 		}
 
@@ -158,7 +158,7 @@ return {
 						"  Are you sure you want to force quit?",
 						"  This will discard all unsaved changes!",
 						"",
-						"    [N] No (default)      [Y] Yes",
+						"	 [N] No (default)	   [Y] Yes",
 						"",
 					}
 					vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
