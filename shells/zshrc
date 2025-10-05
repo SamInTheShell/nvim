@@ -1,0 +1,15 @@
+autoload -U select-word-style
+select-word-style bash
+setopt noautomenu
+setopt nomenucomplete
+setopt interactive_comments
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+bindkey "\e[1;2C" end-of-line
+bindkey "\e[1;2D" beginning-of-line
+
+source ~/.config/nvim/shells/autoloads
+
+# setup omp prompt
+eval "$(oh-my-posh init zsh --config ~/.config/nvim/omp.yaml)"
+

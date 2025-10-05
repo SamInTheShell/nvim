@@ -1,0 +1,21 @@
+# ensure ssh directory is setup with correct perms
+[ ! -d ~/.ssh ] && mkdir ~/.ssh && chmod u=rwx,g=,o= ~/.ssh
+
+# make a private bin dir if it doesn't exist
+[ ! -d ~/bin ] && mkdir ~/bin
+export PATH="${PATH}:${HOME}/bin"
+
+# setup ~/.profiles.d
+[ ! -d ~/.profiles.d ] && mkdir ~/.profiles.d && chmod u=rwx,g=,o= ~/.profiles.d
+
+# setup private env file
+[ ! -f ~/.profiles.d/private.env ] && touch ~/.profiles.d/private.env && chmod u=rwx,g=,o= ~/.profiles.d/private.env
+
+# load profiles
+for profile_file in $(find ~/.profiles.d -not -name "*.disabled" -not -name "*.md" -type f); do
+    source "${profile_file}";
+done
+
+# setup omp prompt
+eval "$(oh-my-posh init zsh --config ~/.config/nvim/oh-my-posh.yaml)"
+

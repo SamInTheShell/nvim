@@ -1,0 +1,5 @@
+#source ~/.config/nvim/shells/autoloads
+
+# setup omp prompt
+eval "$(oh-my-posh init bash --config ~/.config/nvim/omp.yaml)"
+
