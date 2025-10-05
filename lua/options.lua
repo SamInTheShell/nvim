@@ -7,6 +7,7 @@ vim.opt.numberwidth = 4
 vim.opt.signcolumn = "yes:2"
 vim.opt.splitright = true
 vim.opt.splitbelow = true
+vim.opt.wrap = false
 
 -- Enable mouse support for native-like selection
 vim.opt.mouse = "a"
@@ -54,6 +55,10 @@ vim.keymap.set("n", "<D-a>", "ggVG", { desc = "Select all" })
 -- Better visual mode behavior
 vim.keymap.set("v", "<", "<gv", { desc = "Indent and reselect" })
 vim.keymap.set("v", ">", ">gv", { desc = "Unindent and reselect" })
+
+-- Show line extensions and whitespace
+vim.opt.list = true
+vim.opt.listchars = { extends = "→", precedes = "←", tab = "  ", trail = "·" }
 
 -- Fix Go comment block auto-indent
 vim.api.nvim_create_autocmd("FileType", {
