@@ -93,14 +93,19 @@ return {
 		for i, button in ipairs(dashboard.section.bottom_buttons.val) do
 			if button.val and (string.match(button.val:lower(), "quit") or string.match(button.val:lower(), "q")) then
 				local quit_command =
-					"<cmd>lua if require('nvim-tree.view').is_visible() then require('nvim-tree.api').tree.close() end; vim.cmd('qa')<CR>"
+					"<cmd>lua if require('nvim-tree.view').is_visible() then require('nvim-tree.api').tree.close() end; local ok, err = pcall(vim.cmd, 'qa'); if not ok then vim.api.nvim_echo({{ err, 'ErrorMsg' }}, true, {}) end<CR>"
 				button.opts.keymap[3] = quit_command
 				-- Override on_press to execute the same command as the keymap
 				button.on_press = function()
 					if require("nvim-tree.view").is_visible() then
 						require("nvim-tree.api").tree.close()
 					end
-					vim.cmd("qa")
+					-- Use pcall to catch errors and display them properly
+					local ok, err = pcall(vim.cmd, "qa")
+					if not ok then
+						-- Re-display the error message that Vim would normally show
+						vim.api.nvim_echo({{ err, "ErrorMsg" }}, true, {})
+					end
 				end
 				break
 			end
@@ -116,7 +121,7 @@ return {
 				vim.keymap.set("c", "<CR>", function()
 					local cmdline = vim.fn.getcmdline()
 					if cmdline == "q" then
-						-- Clear command line and execute our custom quit
+						-- Clear command line and execute our custom quit with proper error handling
 						vim.api.nvim_feedkeys(
 							vim.api.nvim_replace_termcodes("<C-u><Esc>", true, false, true),
 							"n",
@@ -125,7 +130,12 @@ return {
 						if require("nvim-tree.view").is_visible() then
 							require("nvim-tree.api").tree.close()
 						end
-						vim.cmd("qa")
+						-- Use pcall to catch errors and display them properly
+						local ok, err = pcall(vim.cmd, "qa")
+						if not ok then
+							-- Re-display the error message that Vim would normally show
+							vim.api.nvim_echo({{ err, "ErrorMsg" }}, true, {})
+						end
 					elseif cmdline == "q!" then
 						-- Clear command line and execute our custom force quit
 						vim.api.nvim_feedkeys(
