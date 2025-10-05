@@ -52,7 +52,15 @@ Open `nvim` in the terminal.
 
 ## Basic Editing
 
-In normal mode, use `w`, `b`, `j`, and `k` to move around, jumping over words and switching lines.
+In normal mode, use `j` and `k` to move cursor up or down.
+
+In normal mode, use `h` and `l` to move cursor left or right.
+
+In normal mode, use `w` and `b` to move cursor left or right jumping over words.
+
+In normal mode, use `H`, `M`, and `L` to move the cursor to the first, middle, and last lines in view.
+
+In normal mode, use `Ctrl+d` and `Ctrl+u` to scroll half page.
 
 In normal mode, use `v` to select text.
 
