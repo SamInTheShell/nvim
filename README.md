@@ -121,3 +121,13 @@ Press `I` to go into insert mode.
 Make your changes. They will only show on the first line.
 
 Escape insert mode and the changes will be applied to all the selected lines.
+
+## Buffers
+
+When you quit a file with `:q`, it will still be in a buffer in the background.
+
+In normal mode, use `<leader>fb` to open the Telescope buffer list.
+
+Select a buffer and press enter to open it.
+
+With the buffer opened, use `:bd` to delete the buffer (or `:bd!` when unsaved changes are in the buffer).
