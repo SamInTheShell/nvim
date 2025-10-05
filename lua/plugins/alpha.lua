@@ -1,3 +1,5 @@
+-- WARNING: DO NOT AUTOFORMAT THIS FILE
+-- stylua will fuck this file royally.
 return {
 	"goolord/alpha-nvim",
 	-- dependencies = { 'echasnovski/mini.icons' },
@@ -258,11 +260,7 @@ return {
    table.insert(dashboard.section.bottom_buttons.val, quit_button_index + 1, padding1)
    table.insert(dashboard.section.bottom_buttons.val, quit_button_index + 2, padding2)
    table.insert(dashboard.section.bottom_buttons.val, quit_button_index + 3, padding3)
-   table.insert(dashboard.section.bottom_buttons.val, quit_button_index + 4, force_quit_button)
-end
-   require("alpha").setup(dashboard.config)
-   -- Remap :q and :q! to work properly when alpha buffer is in focus
-  vim.api.nvim_create_autocmd("FileType", {
+   table.insert(dashboard.section.bottom_buttons.val, quit_button_index + 4, force_quit_button)   end   require("alpha").setup(dashboard.config)   -- Remap :q and :q! to work properly when alpha buffer is in focus   vim.api.nvim_create_autocmd("FileType", {
    pattern = "alpha",
    callback = function(args)
 	   -- Override Enter key but only for q and q! commands, let everything else through
@@ -300,7 +298,6 @@ end
 			   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, false, true), "n", false)
 		   end
 	   end, { buffer = args.buf })
-   end,
-   })
-end,
+   end,   }
+  end,
 }
