@@ -58,7 +58,83 @@ vim.keymap.set("v", ">", ">gv", { desc = "Unindent and reselect" })
 
 -- Show line extensions and whitespace
 vim.opt.list = true
-vim.opt.listchars = { extends = "→", precedes = "←", tab = "  ", trail = "·" }
+vim.opt.listchars = { 
+	extends = "→", 
+	precedes = "←", 
+	tab = "┊ ",     -- Shows tabs as a subtle vertical line
+	trail = "·",    -- Shows trailing spaces
+	space = "·",    -- Shows all spaces (toggle with :set list!)
+	nbsp = "⦸"      -- Shows non-breaking spaces
+}
+
+-- Toggle whitespace visibility
+vim.keymap.set("n", "<leader>tw", ":set list!<CR>", { desc = "Toggle whitespace visibility" })
+
+-- Auto-detect indentation type (tabs vs spaces)
+local function detect_indentation()
+	local buf = vim.api.nvim_get_current_buf()
+	local lines = vim.api.nvim_buf_get_lines(buf, 0, 100, false) -- Check first 100 lines
+	
+	local tab_count = 0
+	local space_count = 0
+	local space_indent_sizes = {}
+	
+	for _, line in ipairs(lines) do
+		if line:match("^%s+") then -- Line starts with whitespace
+			if line:match("^\t") then
+				tab_count = tab_count + 1
+			elseif line:match("^ ") then
+				space_count = space_count + 1
+				-- Count leading spaces to detect indent size
+				local spaces = line:match("^( +)")
+				if spaces then
+					local count = #spaces
+					space_indent_sizes[count] = (space_indent_sizes[count] or 0) + 1
+				end
+			end
+		end
+	end
+	
+	-- Decide based on what we found
+	if tab_count > space_count then
+		-- Use tabs
+		vim.bo.expandtab = false
+		vim.bo.tabstop = 4
+		vim.bo.shiftwidth = 4
+		vim.bo.softtabstop = 4
+		print("Detected tabs - using tab indentation")
+	elseif space_count > 0 then
+		-- Use spaces, detect most common indent size
+		local most_common_size = 2 -- default
+		local max_count = 0
+		for size, count in pairs(space_indent_sizes) do
+			if count > max_count and (size == 2 or size == 4 or size == 8) then
+				most_common_size = size
+				max_count = count
+			end
+		end
+		
+		vim.bo.expandtab = true
+		vim.bo.tabstop = most_common_size
+		vim.bo.shiftwidth = most_common_size
+		vim.bo.softtabstop = most_common_size
+		print("Detected spaces - using " .. most_common_size .. "-space indentation")
+	end
+end
+
+-- Auto-detect indentation when opening files
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+	callback = function()
+		-- Skip for very small files or empty files
+		local line_count = vim.api.nvim_buf_line_count(0)
+		if line_count > 5 then
+			detect_indentation()
+		end
+	end,
+})
+
+-- Manual command to re-detect indentation
+vim.api.nvim_create_user_command("DetectIndent", detect_indentation, { desc = "Detect and set indentation type" })
 
 -- Fix Go comment block auto-indent
 vim.api.nvim_create_autocmd("FileType", {
