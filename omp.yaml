@@ -1,152 +1,160 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
 
 palette:
-    black: '#282a36'
-    blue: '#80b4fc'
-    gray: '#161d29'
-    green: '#96e49e'
-    lightgray: '#283245'
-    orange: '#fde2ad'
-    purple: '#bd93f9'
-    red: '#ff5555'
-    white: '#f8f8f2'
-    yellow: '#f1fa8c'
+  black: "#282a36"
+  blue: "#80b4fc"
+  gray: "#161d29"
+  green: "#96e49e"
+  lightgray: "#283245"
+  orange: "#fde2ad"
+  purple: "#bd93f9"
+  red: "#ff5555"
+  white: "#f8f8f2"
+  yellow: "#f1fa8c"
 secondary_prompt:
-    template: '<p:yellow,transparent></><,p:yellow> > </><p:yellow,transparent></> '
-    foreground: p:black
-    background: transparent
+  template: "<p:yellow,transparent></><,p:yellow> > </><p:yellow,transparent></> "
+  foreground: p:black
+  background: transparent
 upgrade:
-    source: cdn
-    interval: 168h
-    auto: false
-    notice: false
-console_title_template: '{{ .Shell }} in {{ .Folder }}'
+  source: cdn
+  interval: 168h
+  auto: false
+  notice: false
+console_title_template: "{{ .Shell }} in {{ .Folder }}"
 blocks:
-    - type: prompt
-      alignment: left
-      segments:
-        - trailing_diamond: 
-          template: ' {{ if .SSHSession }} {{ end }}{{ .UserName }}@{{ .HostName }} '
-          foreground: p:black
-          background: p:blue
-          type: session
-          style: diamond
-        - properties:
-            style: full
-          template: '  {{ path .Path .Location }} '
-          foreground: p:blue
-          powerline_symbol: 
-          background: p:lightgray
-          type: path
-          style: powerline
-        - properties:
-            branch_template: '{{ trunc 25 .Branch }}'
-            fetch_status: true
-            fetch_upstream_icon: true
-          template: ' {{ if .UpstreamURL }}{{ url .UpstreamIcon .UpstreamURL }} {{ end }}{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }}  {{ .Working.String }}{{ end }}{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }} '
-          foreground: p:black
-          powerline_symbol: 
-          background: p:green
-          type: git
-          style: powerline
-          foreground_templates:
-            - '{{ if or (.Working.Changed) (.Staging.Changed) }}p:black{{ end }}'
-            - '{{ if and (gt .Ahead 0) (gt .Behind 0) }}p:black{{ end }}'
-            - '{{ if gt .Ahead 0 }}p:black{{ end }}'
-            - '{{ if gt .Behind 0 }}p:black{{ end }}'
-          background_templates:
-            - '{{ if or (.Working.Changed) (.Staging.Changed) }}p:orange{{ end }}'
-            - '{{ if and (gt .Ahead 0) (gt .Behind 0) }}p:red{{ end }}'
-            - '{{ if gt .Ahead 0 }}p:orange{{ end }}'
-            - '{{ if gt .Behind 0 }}p:orange{{ end }}'
-        - template: '  '
-          foreground: p:black
-          powerline_symbol: 
-          background: p:blue
-          type: root
-          style: powerline
-        - properties:
-            always_enabled: true
-          leading_diamond: <transparent,background></>
-          trailing_diamond: 
-          template: ' {{ if gt .Code 0 }}✗{{ else }}✓{{ end }} '
-          foreground: p:black
-          background: p:blue
-          type: status
-          style: diamond
-          background_templates:
-            - '{{ if gt .Code 0 }}p:red{{ end }}'
-    - type: prompt
-      alignment: right
-      segments:
-        - properties:
-            display_mode: files
-            fetch_package_manager: false
-            home_enabled: false
-          template: ' '
-          foreground: p:green
-          background: transparent
-          type: node
-          style: plain
-        - properties:
-            fetch_version: false
-          template: ' '
-          foreground: p:blue
-          background: transparent
-          type: go
-          style: plain
-        - properties:
-            display_mode: files
-            fetch_version: false
-            fetch_virtual_env: false
-          template: ' '
-          foreground: p:yellow
-          background: transparent
-          type: python
-          style: plain
-        - leading_diamond: 
-          trailing_diamond: 
-          template: ' {{ .Name }} '
-          foreground: p:black
-          background: p:blue
-          type: shell
-          style: diamond
-        - leading_diamond: <transparent,background></>
-          template: ' {{ .CurrentDate | date "15:04:05" }} '
-          foreground: p:blue
-          background: p:lightgray
-          type: time
-          style: diamond
-    - type: prompt
-      alignment: left
-      segments:
-        - template: '❯ '
-          foreground: p:blue
-          type: text
-          style: plain
-      newline: true
+  - type: prompt
+    alignment: left
+    segments:
+      - leading_diamond: 
+        trailing_diamond: 
+        template: " {{ if .SSHSession }} {{ end }}{{ .UserName }}@{{ .HostName }} "
+        foreground: p:black
+        background: p:blue
+        type: session
+        style: diamond
+
+      # - properties:
+      #     display_mode: files
+      #     fetch_package_manager: false
+      #     home_enabled: false
+      #   template: " "
+      #   foreground: p:green
+      #   background: transparent
+      #   type: node
+      #   style: plain
+      #
+      # - properties:
+      #     fetch_version: false
+      #   template: " "
+      #   foreground: p:blue
+      #   background: transparent
+      #   type: go
+      #   style: plain
+      #
+      # - properties:
+      #     display_mode: files
+      #     fetch_version: false
+      #     fetch_virtual_env: false
+      #   template: " "
+      #   foreground: p:yellow
+      #   background: transparent
+      #   type: python
+      #   style: plain
+
+      - leading_diamond: <transparent,background></>
+        trailing_diamond: 
+        template: " {{ .Name }} "
+        foreground: p:black
+        background: p:blue
+        type: shell
+        style: diamond
+
+      - leading_diamond: <transparent,background></>
+        trailing_diamond: 
+        template: ' {{ .CurrentDate | date "15:04:05" }} '
+        foreground: p:blue
+        background: p:lightgray
+        type: time
+        style: diamond
+
+      - properties:
+          style: full
+        template: "  {{ path .Path .Location }} "
+        foreground: p:blue
+        powerline_symbol: 
+        background: p:lightgray
+        type: path
+        style: powerline
+
+      - properties:
+          branch_template: "{{ trunc 25 .Branch }}"
+          fetch_status: true
+          fetch_upstream_icon: true
+        template: " {{ if .UpstreamURL }}{{ url .UpstreamIcon .UpstreamURL }} {{ end }}{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }}  {{ .Working.String }}{{ end }}{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }} "
+        foreground: p:black
+        powerline_symbol: 
+        background: p:green
+        type: git
+        style: powerline
+        foreground_templates:
+          - "{{ if or (.Working.Changed) (.Staging.Changed) }}p:black{{ end }}"
+          - "{{ if and (gt .Ahead 0) (gt .Behind 0) }}p:black{{ end }}"
+          - "{{ if gt .Ahead 0 }}p:black{{ end }}"
+          - "{{ if gt .Behind 0 }}p:black{{ end }}"
+        background_templates:
+          - "{{ if or (.Working.Changed) (.Staging.Changed) }}p:orange{{ end }}"
+          - "{{ if and (gt .Ahead 0) (gt .Behind 0) }}p:red{{ end }}"
+          - "{{ if gt .Ahead 0 }}p:orange{{ end }}"
+          - "{{ if gt .Behind 0 }}p:orange{{ end }}"
+
+      - template: "  "
+        foreground: p:black
+        powerline_symbol: 
+        background: p:blue
+        type: root
+        style: powerline
+
+      - properties:
+          always_enabled: true
+        leading_diamond: <transparent,background></>
+        trailing_diamond: 
+        template: " {{ if gt .Code 0 }}✗{{ else }}✓{{ end }} "
+        foreground: p:black
+        background: p:blue
+        type: status
+        style: diamond
+        background_templates:
+          - "{{ if gt .Code 0 }}p:red{{ end }}"
+  - type: prompt
+    alignment: left
+    segments:
+      - template: "❯ "
+        foreground: p:blue
+        type: text
+        style: plain
+    newline: true
 tooltips:
-    - properties:
-        display_default: true
-      leading_diamond: 
-      trailing_diamond: 
-      template: '  {{ .Profile }}{{ if .Region }}@{{ .Region }}{{ end }} '
-      foreground: p:white
-      background: p:orange
-      type: aws
-      style: diamond
-      tips:
-        - aws
-    - properties:
-        display_default: true
-      leading_diamond: 
-      trailing_diamond: 
-      template: '  {{ .Name }} '
-      foreground: p:white
-      background: p:blue
-      type: az
-      style: diamond
-      tips:
-        - az
+  - properties:
+      display_default: true
+    leading_diamond: 
+    trailing_diamond: 
+    template: "  {{ .Profile }}{{ if .Region }}@{{ .Region }}{{ end }} "
+    foreground: p:white
+    background: p:orange
+    type: aws
+    style: diamond
+    tips:
+      - aws
+  - properties:
+      display_default: true
+    leading_diamond: 
+    trailing_diamond: 
+    template: "  {{ .Name }} "
+    foreground: p:white
+    background: p:blue
+    type: az
+    style: diamond
+    tips:
+      - az
 version: 3
 final_space: true
