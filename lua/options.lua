@@ -58,13 +58,13 @@ vim.keymap.set("v", ">", ">gv", { desc = "Unindent and reselect" })
 
 -- Show line extensions and whitespace
 vim.opt.list = true
-vim.opt.listchars = { 
-	extends = "→", 
-	precedes = "←", 
-	tab = "┊ ",     -- Shows tabs as a subtle vertical line
-	trail = "·",    -- Shows trailing spaces
-	space = "·",    -- Shows all spaces (toggle with :set list!)
-	nbsp = "⦸"      -- Shows non-breaking spaces
+vim.opt.listchars = {
+	extends = "→",
+	precedes = "←",
+	tab = "┊ ", -- Shows tabs as a subtle vertical line
+	trail = "·", -- Shows trailing spaces
+	space = "·", -- Shows all spaces (toggle with :set list!)
+	nbsp = "⦸", -- Shows non-breaking spaces
 }
 
 -- Toggle whitespace visibility
@@ -74,11 +74,11 @@ vim.keymap.set("n", "<leader>tw", ":set list!<CR>", { desc = "Toggle whitespace 
 local function detect_indentation()
 	local buf = vim.api.nvim_get_current_buf()
 	local lines = vim.api.nvim_buf_get_lines(buf, 0, 100, false) -- Check first 100 lines
-	
+
 	local tab_count = 0
 	local space_count = 0
 	local space_indent_sizes = {}
-	
+
 	for _, line in ipairs(lines) do
 		if line:match("^%s+") then -- Line starts with whitespace
 			if line:match("^\t") then
@@ -94,7 +94,7 @@ local function detect_indentation()
 			end
 		end
 	end
-	
+
 	-- Decide based on what we found
 	if tab_count > space_count then
 		-- Use tabs
@@ -113,7 +113,7 @@ local function detect_indentation()
 				max_count = count
 			end
 		end
-		
+
 		vim.bo.expandtab = true
 		vim.bo.tabstop = most_common_size
 		vim.bo.shiftwidth = most_common_size
@@ -123,7 +123,7 @@ local function detect_indentation()
 end
 
 -- Auto-detect indentation when opening files
-vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 	callback = function()
 		-- Skip for very small files or empty files
 		local line_count = vim.api.nvim_buf_line_count(0)
