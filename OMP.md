@@ -6,8 +6,24 @@ brew install jandedobbeleer/oh-my-posh/oh-my-posh
 
 Initial setup.
 
+Example `~/.zshrc`
+
 ```
-eval "$(oh-my-posh init zsh --config ~/.config/nvim/omp.yaml)"
+source ~/.config/nvim/shells/zshrc
+```
+
+Example `~/.bashrc`
+
+```
+source ~/.config/nvim/shells/bashrc
+```
+
+Note that some systems, `~/.bash_profile` may need to source `~/.bash_rc`.
+
+```
+if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+fi
 ```
 
 Debugging.
