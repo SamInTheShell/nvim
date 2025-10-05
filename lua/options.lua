@@ -136,6 +136,29 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 -- Manual command to re-detect indentation
 vim.api.nvim_create_user_command("DetectIndent", detect_indentation, { desc = "Detect and set indentation type" })
 
+-- Make 'w' stop at end of line instead of wrapping to next line
+local function my_w_motion()
+	local initial_line = vim.fn.line(".")
+	local initial_col = vim.fn.col(".")
+	local line_length = vim.fn.col("$") - 1 -- col('$') gives position after last char
+
+	-- If we're already at the end of the line, allow normal 'w' to go to next line
+	if initial_col >= line_length then
+		vim.cmd("normal! w")
+		return
+	end
+
+	vim.cmd("normal! w")
+	local new_line = vim.fn.line(".")
+
+	-- If we jumped to a new line (and we weren't already at the end), go back to end of previous line
+	if initial_line ~= new_line then
+		vim.cmd("normal! k$")
+	end
+end
+
+vim.keymap.set("n", "w", my_w_motion, { desc = "Word forward (stops at end of line)" })
+
 -- Fix Go comment block auto-indent
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "go",
