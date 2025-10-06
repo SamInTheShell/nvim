@@ -22,9 +22,17 @@ vim.opt.wildmode = "longest:full,full"
 vim.opt.wildoptions = "pum"
 vim.opt.pumheight = 10
 
--- New panels
-vim.keymap.set("n", "<leader>n", ":new<CR>", { desc = "New window below current" })
-vim.keymap.set("n", "<leader>N", ":vnew<CR>", { desc = "New window right of current" })
+-- New panels with directional window creation
+-- <leader>n + arrow keys / hjkl for directional window creation
+vim.keymap.set("n", "<leader>n<Up>", ":above new<CR>", { desc = "New window above current" })
+vim.keymap.set("n", "<leader>nk", ":above new<CR>", { desc = "New window above current" })
+vim.keymap.set("n", "<leader>n<Down>", ":below new<CR>", { desc = "New window below current" })
+vim.keymap.set("n", "<leader>nj", ":below new<CR>", { desc = "New window below current" })
+vim.keymap.set("n", "<leader>n<Left>", ":leftabove vnew<CR>", { desc = "New window left of current" })
+vim.keymap.set("n", "<leader>nh", ":leftabove vnew<CR>", { desc = "New window left of current" })
+vim.keymap.set("n", "<leader>n<Right>", ":rightbelow vnew<CR>", { desc = "New window right of current" })
+vim.keymap.set("n", "<leader>nl", ":rightbelow vnew<CR>", { desc = "New window right of current" })
+vim.keymap.set("n", "<leader>nn", ":new<CR>", { desc = "New window below current" })
 vim.keymap.set("n", "<leader>q", ":bd<CR>")
 vim.keymap.set("n", "<leader>Q", ":bd!<CR>")
 vim.keymap.set("n", "<leader>rh", ":horizontal resize ")

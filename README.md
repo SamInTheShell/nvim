@@ -143,3 +143,41 @@ Select a buffer and press enter to open it.
 With the buffer opened, use `:bd` to delete the buffer (or `:bd!` when unsaved changes are in the buffer).
 
 To close all buffers, use `:%bd` (or `:%bd!` to ignore unsaved changes).
+
+## Windows
+
+Just see `:help :wincmd` for more info.
+
+In normal mode, `<leader>n<arrow>` creates a new window beside the active one based on the `<arrow>` direction.
+
+In normal mode, `<leader>nn` creates a new window below the active window.
+
+In normal mode, `Ctrl+w w` moves to the next window.
+
+In normal mode, `Ctrl+w W` moves to the previous window.
+
+In normal mode, `Ctrl+w <` will decrease the current window width.
+
+In normal mode, `Ctrl+w >` will increase the current window width.
+
+In normal mode, `Ctrl+w -` will decrease the current window height.
+
+In normal mode, `Ctrl+w +` will increase the current window height.
+
+In normal mode, `<leader>rh` is used for resizing the window width. You must type in a number.
+
+In normal mode, `<leader>rv` is used for resizing the window height. You must type in a number.
+
+In normal mode, `Ctrl+w T` moves the active window to a new tab. Use `gt` and `gT` to cycle tabs.
+
+## Telescope
+
+Using `Ctrl+/` will show available key commands when a Telescope window is active.
+
+### Buffers
+
+In normal mode, `<leader>fb` opens `:Telescope buffers`.
+
+Selecting a buffer and pressing `<enter>` will switch the active window to that buffer.
+
+Selecting a buffer and pressing `Ctrl+x` will open the buffer in a new window below the active window.
