@@ -111,7 +111,7 @@ return {
 			},
 			actions = {
 				change_dir = {
-					enable = false,
+					restrict_above_cwd = true,
 				},
 			},
 			on_attach = on_attach,
