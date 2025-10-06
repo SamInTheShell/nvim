@@ -109,6 +109,11 @@ return {
 			filesystem_watchers = {
 				enable = true,
 			},
+			actions = {
+				change_dir = {
+					enable = false,
+				},
+			},
 			on_attach = on_attach,
 		})
 
