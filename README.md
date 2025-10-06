@@ -141,3 +141,5 @@ In normal mode, use `<leader>fb` to open the Telescope buffer list.
 Select a buffer and press enter to open it.
 
 With the buffer opened, use `:bd` to delete the buffer (or `:bd!` when unsaved changes are in the buffer).
+
+To close all buffers, use `:%bd` (or `:%bd!` to ignore unsaved changes).
