@@ -24,7 +24,9 @@ return {
 				group_empty = true,
 			},
 			filters = {
-				dotfiles = true,
+				dotfiles = false,
+				git_ignored = false,
+				custom = {},
 			},
 			filesystem_watchers = {
 				enable = true,
