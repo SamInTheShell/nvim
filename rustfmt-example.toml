@@ -1,0 +1,5 @@
+max_width = 256
+chain_width = 256
+single_line_if_else_max_width = 256
+force_multiline_blocks = false
+newline_style = "Unix"
