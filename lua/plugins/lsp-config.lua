@@ -21,6 +21,7 @@ return {
 					"gopls", -- Go
 					"pyright", -- Python LSP
 					"ts_ls", -- TypeScript/JavaScript
+					"rust_analyzer", -- Rust LSP
 				},
 				automatic_installation = true,
 			})
@@ -122,6 +123,34 @@ return {
 							includeInlayPropertyDeclarationTypeHints = true,
 							includeInlayFunctionLikeReturnTypeHints = true,
 							includeInlayEnumMemberValueHints = true,
+						},
+					},
+				},
+			}
+
+			-- Rust LSP configuration
+			vim.lsp.config.rust_analyzer = {
+				cmd = { "rust-analyzer" },
+				filetypes = { "rust" },
+				settings = {
+					["rust-analyzer"] = {
+						cargo = {
+							allFeatures = true,
+							loadOutDirsFromCheck = true,
+							runBuildScripts = true,
+						},
+						checkOnSave = true,
+						check = {
+							allFeatures = true,
+							command = "clippy",
+						},
+						procMacro = {
+							enable = true,
+							ignored = {
+								["async-trait"] = { "async_trait" },
+								["napi-derive"] = { "napi" },
+								["async-recursion"] = { "async_recursion" },
+							},
 						},
 					},
 				},
