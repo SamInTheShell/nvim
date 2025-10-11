@@ -1,7 +1,7 @@
 vim.cmd("set expandtab")
-vim.cmd("set tabstop=2")
-vim.cmd("set softtabstop=2")
-vim.cmd("set shiftwidth=2")
+-- vim.cmd("set tabstop=2")
+-- vim.cmd("set softtabstop=2")
+-- vim.cmd("set shiftwidth=2")
 vim.cmd("set number")
 vim.opt.numberwidth = 4
 vim.opt.signcolumn = "yes:2"
@@ -183,7 +183,7 @@ vim.api.nvim_create_autocmd("FileType", {
 local function smart_H()
 	local current_line = vim.fn.line(".")
 	local top_line = vim.fn.line("w0")
-	
+
 	if current_line == top_line then
 		vim.cmd("normal! " .. vim.keycode("<C-u>"))
 	else
@@ -194,7 +194,7 @@ end
 local function smart_L()
 	local current_line = vim.fn.line(".")
 	local bottom_line = vim.fn.line("w$")
-	
+
 	if current_line == bottom_line then
 		vim.cmd("normal! " .. vim.keycode("<C-d>"))
 	else
