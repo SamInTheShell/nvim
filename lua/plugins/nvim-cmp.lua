@@ -36,6 +36,12 @@ return {
 				["<C-Space>"] = cmp.mapping.complete(),
 				["<C-e>"] = cmp.mapping.abort(),
 				["<CR>"] = cmp.mapping.confirm({ select = false }),
+				["<Up>"] = cmp.mapping(function(fallback)
+					fallback()
+				end, { "i" }),
+				["<Down>"] = cmp.mapping(function(fallback)
+					fallback()
+				end, { "i" }),
 				["<Tab>"] = cmp.mapping(function(fallback)
 					if cmp.visible() then
 						cmp.select_next_item()
