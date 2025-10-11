@@ -178,3 +178,29 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.opt_local.formatoptions:append("ro")
 	end,
 })
+
+-- Enhanced H and L behavior: scroll half page if already at top/bottom
+local function smart_H()
+	local current_line = vim.fn.line(".")
+	local top_line = vim.fn.line("w0")
+	
+	if current_line == top_line then
+		vim.cmd("normal! " .. vim.keycode("<C-u>"))
+	else
+		vim.cmd("normal! H")
+	end
+end
+
+local function smart_L()
+	local current_line = vim.fn.line(".")
+	local bottom_line = vim.fn.line("w$")
+	
+	if current_line == bottom_line then
+		vim.cmd("normal! " .. vim.keycode("<C-d>"))
+	else
+		vim.cmd("normal! L")
+	end
+end
+
+vim.keymap.set("n", "H", smart_H, { desc = "Move to top line or scroll half page up" })
+vim.keymap.set("n", "L", smart_L, { desc = "Move to bottom line or scroll half page down" })
