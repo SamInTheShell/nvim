@@ -107,7 +107,6 @@ local function detect_indentation()
 		vim.bo.tabstop = 4
 		vim.bo.shiftwidth = 4
 		vim.bo.softtabstop = 4
-		print("Detected tabs - using tab indentation")
 	elseif space_count > 0 then
 		-- Use spaces, detect most common indent size
 		local most_common_size = 2 -- default
@@ -123,7 +122,6 @@ local function detect_indentation()
 		vim.bo.tabstop = most_common_size
 		vim.bo.shiftwidth = most_common_size
 		vim.bo.softtabstop = most_common_size
-		print("Detected spaces - using " .. most_common_size .. "-space indentation")
 	end
 end
 

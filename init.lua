@@ -34,13 +34,12 @@ local function setup_godot_listen()
 	if vim.fn.filereadable(project_file) == 1 then
 		-- Start the server
 		vim.fn.serverstart(socket_file)
-		print("Started Godot LSP server at: " .. socket_file)
 	end
 end
 
 setup_godot_listen()
 
-vim.g.godot_executable = '/Applications/Godot 4.5-stable.app/Contents/MacOS/Godot'
+vim.g.godot_executable = "/Applications/Godot 4.5-stable.app/Contents/MacOS/Godot"
 
 -- Auto load plugins
 require("options")
