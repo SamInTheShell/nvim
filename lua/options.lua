@@ -201,3 +201,5 @@ end
 
 vim.keymap.set("n", "H", smart_H, { desc = "Move to top line or scroll half page up" })
 vim.keymap.set("n", "L", smart_L, { desc = "Move to bottom line or scroll half page down" })
+vim.keymap.set("v", "H", smart_H, { desc = "Move to top line or scroll half page up" })
+vim.keymap.set("v", "L", smart_L, { desc = "Move to bottom line or scroll half page down" })
