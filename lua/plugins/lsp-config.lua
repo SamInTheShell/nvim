@@ -61,6 +61,15 @@ return {
 				end,
 			})
 
+			-- Godot LSP Configuration
+			vim.lsp.config.gdscript = {
+				cmd = { "nc", "localhost", "6005" },
+				filetypes = { "gd", "gdscript", "gdscript3" },
+				root_dir = function(fname)
+					return vim.fs.dirname(vim.fs.find({ "project.godot", ".git" }, { path = fname, upward = true })[1])
+				end,
+			}
+
 			-- Go LSP configuration
 			vim.lsp.config.gopls = {
 				cmd = { "gopls" },

@@ -24,6 +24,24 @@ vim.g.maplocalleader = "\\"
 -- Set /usr/bin first so that default python gets used
 vim.env.PATH = "/usr/bin:" .. vim.env.PATH
 
+-- Godot project auto-listen setup
+local function setup_godot_listen()
+	local cwd = vim.fn.getcwd()
+	local project_file = cwd .. "/project.godot"
+	local socket_file = cwd .. "/godothost"
+
+	-- Check if this is a Godot project
+	if vim.fn.filereadable(project_file) == 1 then
+		-- Start the server
+		vim.fn.serverstart(socket_file)
+		print("Started Godot LSP server at: " .. socket_file)
+	end
+end
+
+setup_godot_listen()
+
+vim.g.godot_executable = '/Applications/Godot 4.5-stable.app/Contents/MacOS/Godot'
+
 -- Auto load plugins
 require("options")
 require("lazy").setup("plugins")
