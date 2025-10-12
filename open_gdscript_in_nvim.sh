@@ -20,9 +20,20 @@ fi
 
 # Use AppleScript to open iTerm2, cd to project root, and run nvim
 osascript <<EOF
+tell application "System Events"
+    if not (exists (processes where name is "iTerm2")) then
+        tell application "iTerm" to activate
+        delay 0.5
+    end if
+end tell
 tell application "iTerm"
-    activate
-    set myterm to (create window with default profile)
+    if not (exists window 1) then
+        set myterm to (create window with default profile)
+    else
+        tell current window
+            set myterm to (create tab with default profile)
+        end tell
+    end if
     tell current session of myterm
         write text "cd '$PROJECT_ROOT' && nvim '$FILE' +${LINE}"
     end tell
