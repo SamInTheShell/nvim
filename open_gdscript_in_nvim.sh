@@ -14,19 +14,17 @@ COL="$4"       # column number
 # Path to godothost, relative to project root
 GODOTHOST="$PROJECT_ROOT/godothost"
 
-echo "HELLO" > ~/.deleteme
-
 if [ -e "$GODOTHOST" ]; then
-    nvim --server "$GODOTHOST" --remote-send "<C-\><C-n>:n $FILE<CR>${LINE}G${COL}|"
-else
-    # Use AppleScript to open iTerm2, cd to project root, and run nvim
-    osascript <<EOF
-    tell application "iTerm"
-        activate
-        set myterm to (create window with default profile)
-        tell current session of myterm
-            write text "cd '$PROJECT_ROOT' && nvim '$FILE' +${LINE} && exit"
-        end tell
-    end tell
-EOF
+    nvim --server "$GODOTHOST" --remote-send "<C-\><C-n>:n $FILE<CR>${LINE}G${COL}|" && exit
 fi
+
+# Use AppleScript to open iTerm2, cd to project root, and run nvim
+osascript <<EOF
+tell application "iTerm"
+    activate
+    set myterm to (create window with default profile)
+    tell current session of myterm
+        write text "cd '$PROJECT_ROOT' && nvim '$FILE' +${LINE}"
+    end tell
+end tell
+EOF
