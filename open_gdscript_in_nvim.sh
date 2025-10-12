@@ -15,6 +15,7 @@ COL="$4"       # column number
 GODOTHOST="$PROJECT_ROOT/godothost"
 
 if [ -e "$GODOTHOST" ]; then
+    osascript -e 'tell application "iTerm" to activate'
     nvim --server "$GODOTHOST" --remote-send "<C-\><C-n>:n $FILE<CR>${LINE}G${COL}|" && exit
 fi
 
@@ -27,6 +28,7 @@ tell application "System Events"
     end if
 end tell
 tell application "iTerm"
+    activate
     if not (exists window 1) then
         set myterm to (create window with default profile)
     else
