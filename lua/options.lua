@@ -201,3 +201,10 @@ vim.keymap.set("n", "H", smart_H, { desc = "Move to top line or scroll half page
 vim.keymap.set("n", "L", smart_L, { desc = "Move to bottom line or scroll half page down" })
 vim.keymap.set("v", "H", smart_H, { desc = "Move to top line or scroll half page up" })
 vim.keymap.set("v", "L", smart_L, { desc = "Move to bottom line or scroll half page down" })
+
+-- Clear screen on exit
+vim.api.nvim_create_autocmd("VimLeave", {
+	callback = function()
+		vim.cmd("!clear")
+	end,
+})
