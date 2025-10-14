@@ -39,7 +39,7 @@ end
 
 setup_godot_listen()
 
-vim.g.godot_executable = "/Applications/Godot 4.5-stable.app/Contents/MacOS/Godot"
+vim.g.godot_executable = vim.env.GODOT_EXECUTABLE
 
 -- Auto load plugins
 require("options")
