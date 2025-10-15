@@ -117,13 +117,13 @@ blocks:
           always_enabled: true
         leading_diamond: <transparent,background></>
         trailing_diamond: 
-        template: " {{ if gt .Code 0 }}✗{{ else }}✓{{ end }} "
+        template: " {{ if and (gt .Code 0) (ne .Code 130) }}✗{{ else if eq .Code 130 }}-{{ else }}✓{{ end }} "
         foreground: p:black
         background: p:blue
         type: status
         style: diamond
         background_templates:
-          - "{{ if gt .Code 0 }}p:red{{ end }}"
+          - "{{ if and (gt .Code 0) (ne .Code 130) }}p:red{{ end }}"
   - type: prompt
     alignment: left
     segments:
