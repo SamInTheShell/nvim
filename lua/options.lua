@@ -10,8 +10,45 @@ vim.opt.wrap = false
 vim.opt.mouse = "a"
 vim.opt.mousefocus = true
 
+-- OSC 52 clipboard provider for SSH sessions
+local function osc52_copy(text)
+	local base64_text = vim.base64.encode(text)
+	local osc52_sequence = string.format("\027]52;c;%s\007", base64_text)
+	io.write(osc52_sequence)
+	io.flush()
+end
+
+-- Detect if we're in an SSH session
+local function is_ssh_session()
+	return vim.env.SSH_CLIENT ~= nil or vim.env.SSH_TTY ~= nil or vim.env.SSH_CONNECTION ~= nil
+end
+
 -- System clipboard integration
-vim.opt.clipboard = "unnamedplus"
+if is_ssh_session() then
+	-- Use OSC 52 for SSH sessions
+	vim.g.clipboard = {
+		name = "OSC 52",
+		copy = {
+			["+"] = function(lines, regtype)
+				osc52_copy(table.concat(lines, "\n"))
+			end,
+			["*"] = function(lines, regtype)
+				osc52_copy(table.concat(lines, "\n"))
+			end,
+		},
+		paste = {
+			["+"] = function()
+				return vim.split(vim.fn.getreg("+"), "\n")
+			end,
+			["*"] = function()
+				return vim.split(vim.fn.getreg("*"), "\n")
+			end,
+		},
+	}
+else
+	-- Use system clipboard for local sessions
+	vim.opt.clipboard = "unnamedplus"
+end
 
 -- Command-line completion
 vim.opt.wildmenu = true
@@ -41,7 +78,12 @@ vim.keymap.set({ "n", "v" }, "y", function()
 	-- First do the normal yank
 	vim.cmd('normal! "' .. vim.v.register .. "y")
 	-- Then also copy to system clipboard
-	vim.fn.setreg("+", vim.fn.getreg(vim.v.register))
+	local text = vim.fn.getreg(vim.v.register)
+	if is_ssh_session() then
+		osc52_copy(text)
+	else
+		vim.fn.setreg("+", text)
+	end
 end, { desc = "Yank to default register and system clipboard" })
 
 -- Paste
