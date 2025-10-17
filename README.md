@@ -181,3 +181,22 @@ In normal mode, `<leader>fb` opens `:Telescope buffers`.
 Selecting a buffer and pressing `<enter>` will switch the active window to that buffer.
 
 Selecting a buffer and pressing `Ctrl+x` will open the buffer in a new window below the active window.
+
+## Diagnostic Signs
+
+LSP diagnostics are displayed in the sign column (gutter) with single letter indicators:
+
+- `E` - Errors (red) - Code that will not compile or has critical issues
+- `W` - Warnings (yellow) - Code that works but has potential issues or style violations
+- `I` - Information (blue) - General information about the code
+- `H` - Hints (light) - Suggestions for code improvements
+
+These signs appear in the right column of the gutter, with git status indicators (+ ~ \_) appearing in the left column.
+
+Use `<space>e` to open a floating window with detailed diagnostic information for the current line.
+
+Use `]d` and `[d` to jump to the next and previous diagnostic respectively.
+
+## Misc
+
+- `<leader>tm` - Toggles mouse support off/on.
