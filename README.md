@@ -182,6 +182,10 @@ Selecting a buffer and pressing `<enter>` will switch the active window to that 
 
 Selecting a buffer and pressing `Ctrl+x` will open the buffer in a new window below the active window.
 
+## Misc
+
+In normal or visual mode, `<leader>tm` toggles the mouse support off/on.
+
 ## Diagnostic Signs
 
 LSP diagnostics are displayed in the sign column (gutter) with single letter indicators:
@@ -196,7 +200,3 @@ These signs appear in the right column of the gutter, with git status indicators
 Use `<space>e` to open a floating window with detailed diagnostic information for the current line.
 
 Use `]d` and `[d` to jump to the next and previous diagnostic respectively.
-
-## Misc
-
-- `<leader>tm` - Toggles mouse support off/on.

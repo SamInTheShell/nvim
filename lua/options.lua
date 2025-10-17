@@ -118,7 +118,7 @@ vim.opt.listchars = {
 vim.keymap.set("n", "<leader>tw", ":set list!<CR>", { desc = "Toggle whitespace visibility" })
 
 -- Toggle mouse support
-vim.keymap.set("n", "<leader>tm", function()
+vim.keymap.set({ "n", "v" }, "<leader>tm", function()
 	if vim.opt.mouse:get() == "a" then
 		vim.opt.mouse = ""
 		print("Mouse disabled")
