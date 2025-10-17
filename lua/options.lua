@@ -119,11 +119,11 @@ vim.keymap.set("n", "<leader>tw", ":set list!<CR>", { desc = "Toggle whitespace 
 
 -- Toggle mouse support
 vim.keymap.set({ "n", "v" }, "<leader>tm", function()
-	if vim.opt.mouse:get() == "a" then
-		vim.opt.mouse = ""
+	if vim.o.mouse == "a" then
+		vim.o.mouse = ""
 		print("Mouse disabled")
 	else
-		vim.opt.mouse = "a"
+		vim.o.mouse = "a"
 		print("Mouse enabled")
 	end
 end, { desc = "Toggle mouse support" })
