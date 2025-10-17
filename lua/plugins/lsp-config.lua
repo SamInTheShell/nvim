@@ -30,6 +30,19 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		config = function()
+			-- Configure diagnostic signs with better symbols and positioning
+			vim.fn.sign_define("DiagnosticSignError", { text = "E", texthl = "DiagnosticSignError" })
+			vim.fn.sign_define("DiagnosticSignWarn", { text = "W", texthl = "DiagnosticSignWarn" })
+			vim.fn.sign_define("DiagnosticSignInfo", { text = "I", texthl = "DiagnosticSignInfo" })
+			vim.fn.sign_define("DiagnosticSignHint", { text = "H", texthl = "DiagnosticSignHint" })
+
+			-- Configure diagnostics to use lower priority than gitsigns
+			vim.diagnostic.config({
+				signs = {
+					priority = 5, -- Lower priority than gitsigns (10)
+				},
+			})
+
 			-- LSP keybindings
 			vim.api.nvim_create_autocmd("LspAttach", {
 				group = vim.api.nvim_create_augroup("UserLspConfig", {}),
