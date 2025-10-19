@@ -22,7 +22,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
 -- Set /usr/bin first so that default python gets used
-vim.env.PATH = "/usr/bin:" .. vim.env.PATH
+-- vim.env.PATH = "/usr/bin:" .. vim.env.PATH
 
 -- Godot project auto-listen setup
 local function setup_godot_listen()

@@ -102,15 +102,64 @@ return {
 			vim.lsp.config.pyright = {
 				cmd = { "pyright-langserver", "--stdio" },
 				filetypes = { "python" },
+				root_dir = function(fname)
+					if type(fname) ~= "string" then
+						return nil
+					end
+					local found = vim.fs.find(
+						{ "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", ".git" },
+						{ path = fname, upward = true }
+					)
+					return found[1] and vim.fs.dirname(found[1]) or nil
+				end,
 				settings = {
 					python = {
 						analysis = {
 							typeCheckingMode = "basic",
 							autoSearchPaths = true,
 							useLibraryCodeForTypes = true,
+							autoImportCompletions = true,
 						},
+						pythonPath = function()
+							-- Check for virtual environment in current working directory
+							local cwd = vim.fn.getcwd()
+							local venv_paths = {
+								cwd .. "/.venv/bin/python",
+								cwd .. "/venv/bin/python",
+								cwd .. "/.env/bin/python",
+							}
+
+							for _, path in ipairs(venv_paths) do
+								if vim.fn.executable(path) == 1 then
+									return path
+								end
+							end
+
+							-- Fallback to system python
+							return vim.fn.exepath("python3") or vim.fn.exepath("python")
+						end,
 					},
 				},
+				on_new_config = function(new_config, new_root_dir)
+					-- Set python path based on root directory
+					local python_path = nil
+					local venv_paths = {
+						new_root_dir .. "/.venv/bin/python",
+						new_root_dir .. "/venv/bin/python",
+						new_root_dir .. "/.env/bin/python",
+					}
+
+					for _, path in ipairs(venv_paths) do
+						if vim.fn.executable(path) == 1 then
+							python_path = path
+							break
+						end
+					end
+
+					if python_path then
+						new_config.settings.python.pythonPath = python_path
+					end
+				end,
 			}
 
 			-- TypeScript/JavaScript LSP configuration
