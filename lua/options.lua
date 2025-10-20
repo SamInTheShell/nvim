@@ -92,9 +92,17 @@ vim.keymap.set("i", "<D-v>", "<C-r>+", { desc = "Paste from system clipboard" })
 vim.keymap.set("c", "<D-v>", "<C-r>+", { desc = "Paste from system clipboard" })
 vim.keymap.set("v", "<D-v>", '"+p', { desc = "Paste from system clipboard" })
 
--- Cut
+-- Cut (x goes to clipboard)
+vim.keymap.set("v", "x", '"+d', { desc = "Cut to system clipboard" })
+vim.keymap.set("n", "x", '"+dl', { desc = "Cut character to system clipboard" })
 vim.keymap.set("v", "<D-x>", '"+d', { desc = "Cut to system clipboard" })
 vim.keymap.set("v", "<C-x>", '"+d', { desc = "Cut to system clipboard" })
+
+-- Delete (d goes to black hole register, doesn't affect clipboard)
+vim.keymap.set("n", "d", '"_d', { desc = "Delete without copying to clipboard" })
+vim.keymap.set("v", "d", '"_d', { desc = "Delete without copying to clipboard" })
+vim.keymap.set("n", "dd", '"_dd', { desc = "Delete line without copying to clipboard" })
+vim.keymap.set("n", "D", '"_D', { desc = "Delete to end of line without copying to clipboard" })
 
 -- Select all
 vim.keymap.set("n", "<D-a>", "ggVG", { desc = "Select all" })
