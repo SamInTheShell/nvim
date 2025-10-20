@@ -46,8 +46,8 @@ if is_ssh_session() then
 		},
 	}
 else
-	-- Use system clipboard for local sessions
-	vim.opt.clipboard = "unnamedplus"
+	-- Don't automatically sync with system clipboard for local sessions
+	-- We'll handle clipboard writing manually for y and x operations
 end
 
 -- Command-line completion
@@ -75,34 +75,51 @@ vim.keymap.set("n", "<leader>rs", ":vertical resize 60<CR>")
 
 -- Make y copy to system clipboard in addition to default behavior
 vim.keymap.set({ "n", "v" }, "y", function()
-	-- First do the normal yank
+	-- First do the normal yank to nvim's default register
 	vim.cmd('normal! "' .. vim.v.register .. "y")
-	-- Then also copy to system clipboard
+	-- Then also copy to system clipboard (write-only)
 	local text = vim.fn.getreg(vim.v.register)
 	if is_ssh_session() then
 		osc52_copy(text)
 	else
 		vim.fn.setreg("+", text)
 	end
-end, { desc = "Yank to default register and system clipboard" })
+end, { desc = "Yank to nvim register and system clipboard" })
 
--- Paste
-vim.keymap.set("n", "<D-v>", '"+p', { desc = "Paste from system clipboard" })
-vim.keymap.set("i", "<D-v>", "<C-r>+", { desc = "Paste from system clipboard" })
-vim.keymap.set("c", "<D-v>", "<C-r>+", { desc = "Paste from system clipboard" })
-vim.keymap.set("v", "<D-v>", '"+p', { desc = "Paste from system clipboard" })
+-- Paste (only from nvim's internal registers, not system clipboard)
+-- Normal paste operations use nvim's default register
+-- No special mappings needed - p and P work with nvim's internal clipboard
 
--- Cut (x goes to clipboard)
-vim.keymap.set("v", "x", '"+d', { desc = "Cut to system clipboard" })
-vim.keymap.set("n", "x", '"+dl', { desc = "Cut character to system clipboard" })
+-- Cut (x goes to both vim registers and system clipboard)
+vim.keymap.set("v", "x", function()
+	-- First do normal cut to vim register
+	vim.cmd('normal! d')
+	-- Then also copy to system clipboard
+	local text = vim.fn.getreg('"')
+	if is_ssh_session() then
+		osc52_copy(text)
+	else
+		vim.fn.setreg("+", text)
+	end
+end, { desc = "Cut to vim register and system clipboard" })
+
+vim.keymap.set("n", "x", function()
+	-- First do normal cut to vim register
+	vim.cmd('normal! dl')
+	-- Then also copy to system clipboard
+	local text = vim.fn.getreg('"')
+	if is_ssh_session() then
+		osc52_copy(text)
+	else
+		vim.fn.setreg("+", text)
+	end
+end, { desc = "Cut character to vim register and system clipboard" })
+
 vim.keymap.set("v", "<D-x>", '"+d', { desc = "Cut to system clipboard" })
 vim.keymap.set("v", "<C-x>", '"+d', { desc = "Cut to system clipboard" })
 
--- Delete (d goes to black hole register, doesn't affect clipboard)
-vim.keymap.set("n", "d", '"_d', { desc = "Delete without copying to clipboard" })
-vim.keymap.set("v", "d", '"_d', { desc = "Delete without copying to clipboard" })
-vim.keymap.set("n", "dd", '"_dd', { desc = "Delete line without copying to clipboard" })
-vim.keymap.set("n", "D", '"_D', { desc = "Delete to end of line without copying to clipboard" })
+-- Delete operations work normally in vim but don't write to system clipboard
+-- d, dd, D will save to vim registers for pasting with p, but won't go to system clipboard
 
 -- Select all
 vim.keymap.set("n", "<D-a>", "ggVG", { desc = "Select all" })
