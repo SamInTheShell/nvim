@@ -200,3 +200,17 @@ These signs appear in the right column of the gutter, with git status indicators
 Use `<space>e` to open a floating window with detailed diagnostic information for the current line.
 
 Use `]d` and `[d` to jump to the next and previous diagnostic respectively.
+
+## Multi-Cursor Editing
+
+In normal mode, use `Ctrl+n` to select the word under cursor and add next match.
+
+In normal mode, use `Ctrl+p` to select the word under cursor and add previous match.
+
+In normal mode, use `Ctrl+Down` and `Ctrl+Up` to add cursors vertically.
+
+In normal mode, use `\\A` to select all occurrences of the word under cursor.
+
+In multi-cursor mode, use `c` to change all selected words.
+
+In multi-cursor mode, use `d` to delete all selected words.
