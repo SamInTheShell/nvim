@@ -3,6 +3,7 @@ return {
 	branch = "master",
 	keys = {
 		{ "<C-p>", "<Plug>(VM-Find-Under)", desc = "Select word under cursor" },
+		{ "<C-n>", "<Plug>(VM-Find-Under)", desc = "Select word under cursor and find next" },
 	},
 	config = function()
 		-- Default keybindings:
