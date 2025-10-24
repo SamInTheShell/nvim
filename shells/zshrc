@@ -11,5 +11,5 @@ bindkey "\e[1;2D" beginning-of-line
 source ~/.config/nvim/shells/autoloads
 
 # setup omp prompt
-eval "$(oh-my-posh init zsh --config ~/.config/nvim/omp.yaml)"
+eval "$(starship init zsh)"
 

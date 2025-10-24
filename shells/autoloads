@@ -16,6 +16,3 @@ for profile_file in $(find ~/.profiles.d -not -name "*.disabled" -not -name "*.m
     source "${profile_file}";
 done
 
-# setup omp prompt
-eval "$(oh-my-posh init zsh --config ~/.config/nvim/oh-my-posh.yaml)"
-
