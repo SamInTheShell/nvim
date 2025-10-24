@@ -19,13 +19,32 @@ return {
 
 		vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, {})
 
+		local exclude_filetypes = { "json", "jsonc" }
+
 		-- Auto-format on save (excluding JSON files)
 		vim.api.nvim_create_autocmd("BufWritePre", {
 			callback = function()
-				if vim.bo.filetype ~= "json" then
+				local filetype = vim.bo.filetype
+				local should_format = true
+
+				for _, ft in ipairs(exclude_filetypes) do
+					if filetype == ft then
+						should_format = false
+						break
+					end
+				end
+
+				if should_format then
 					vim.lsp.buf.format({ async = false })
 				end
 			end,
 		})
+		-- vim.api.nvim_create_autocmd("BufWritePre", {
+		-- 	callback = function()
+		-- 		if vim.bo.filetype ~= "json" then
+		-- 			vim.lsp.buf.format({ async = false })
+		-- 		end
+		-- 	end,
+		-- })
 	end,
 }
