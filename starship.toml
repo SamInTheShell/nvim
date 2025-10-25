@@ -109,8 +109,8 @@ format = '[@$hostname ]($style)'
 [directory]
 style = "fg:mantle bg:peach"
 format = "[ $path ]($style)"
-truncation_length = 3
-truncation_symbol = "…/"
+truncation_length = 0
+truncate_to_repo = false
 
 [directory.substitutions]
 "Documents" = "󰈙 "
