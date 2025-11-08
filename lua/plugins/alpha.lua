@@ -139,6 +139,17 @@ return {
 			end,
 		})
 
+		-- Update alpha when entering an alpha buffer (covers cases where you navigate back to alpha)
+		vim.api.nvim_create_autocmd("BufEnter", {
+			pattern = "*",
+			callback = function()
+				if vim.bo.filetype == "alpha" then
+					dashboard.section.buttons.val = build_buttons()
+					require("alpha").redraw()
+				end
+			end,
+		})
+
 		-- Send config to alpha
 		alpha.setup(dashboard.opts)
 
@@ -172,7 +183,12 @@ return {
 			local buffers = vim.api.nvim_list_bufs()
 			local other_buf_count = 0
 			for _, buf in ipairs(buffers) do
-				if buf ~= current_buf and vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_is_loaded(buf) and vim.fn.buflisted(buf) == 1 then
+				if
+					buf ~= current_buf
+					and vim.api.nvim_buf_is_valid(buf)
+					and vim.api.nvim_buf_is_loaded(buf)
+					and vim.fn.buflisted(buf) == 1
+				then
 					other_buf_count = other_buf_count + 1
 				end
 			end

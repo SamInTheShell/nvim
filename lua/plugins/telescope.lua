@@ -6,6 +6,54 @@ return {
 	},
 	config = function()
 		local builtin = require("telescope.builtin")
+		local actions = require("telescope.actions")
+		local action_state = require("telescope.actions.state")
+
+		-- Setup telescope with custom buffer mappings
+		require("telescope").setup({
+			pickers = {
+				buffers = {
+					mappings = {
+						i = {
+							["<C-x>"] = function(prompt_bufnr)
+								local current_picker = action_state.get_current_picker(prompt_bufnr)
+								current_picker:delete_selection(function(selection)
+									local bufnr = selection.bufnr
+									-- Find windows displaying this buffer
+									local winids = vim.fn.win_findbuf(bufnr)
+									-- Replace buffer in each window with a new empty buffer to keep windows open
+									for _, winid in ipairs(winids) do
+										local new_buf = vim.api.nvim_create_buf(false, true)
+										vim.api.nvim_win_set_buf(winid, new_buf)
+									end
+									-- Delete the buffer
+									vim.api.nvim_buf_delete(bufnr, { force = true })
+								end)
+							end,
+						},
+						n = {
+							["<C-x>"] = function(prompt_bufnr)
+								local current_picker = action_state.get_current_picker(prompt_bufnr)
+								current_picker:delete_selection(function(selection)
+									local bufnr = selection.bufnr
+									-- Find windows displaying this buffer
+									local winids = vim.fn.win_findbuf(bufnr)
+									-- Replace buffer in each window with a new empty buffer to keep windows open
+									for _, winid in ipairs(winids) do
+										local new_buf = vim.api.nvim_create_buf(false, true)
+										vim.api.nvim_win_set_buf(winid, new_buf)
+									end
+									-- Delete the buffer
+									vim.api.nvim_buf_delete(bufnr, { force = true })
+								end)
+							end,
+						},
+					},
+				},
+			},
+		})
+
+		-- Keymaps
 		vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
 		vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
 		vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
