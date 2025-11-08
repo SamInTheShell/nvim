@@ -162,13 +162,23 @@ return {
 		-- Disable folding on alpha buffer
 		vim.cmd([[autocmd FileType alpha setlocal nofoldenable]])
 
-		-- Custom quit behavior when nvim-tree is open
-		-- When tree is visible and user quits, show alpha welcome screen instead
+		-- Custom quit behavior when nvim-tree is open or multiple buffers exist
+		-- When tree is visible or multiple buffers exist and user quits, show alpha welcome screen instead
 		_G.smart_quit = function(force)
 			local tree_visible = require("nvim-tree.view").is_visible()
 
-			-- Only apply custom behavior if nvim-tree is open
-			if not tree_visible then
+			-- Count OTHER listed buffers (excluding current) - same as get_buffer_count()
+			local current_buf = vim.api.nvim_get_current_buf()
+			local buffers = vim.api.nvim_list_bufs()
+			local other_buf_count = 0
+			for _, buf in ipairs(buffers) do
+				if buf ~= current_buf and vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_is_loaded(buf) and vim.fn.buflisted(buf) == 1 then
+					other_buf_count = other_buf_count + 1
+				end
+			end
+
+			-- Only apply custom behavior if nvim-tree is open OR other buffers exist
+			if not tree_visible and other_buf_count == 0 then
 				return force and "quit!" or "quit"
 			end
 
