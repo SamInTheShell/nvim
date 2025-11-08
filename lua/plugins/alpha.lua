@@ -8,6 +8,51 @@ return {
 		local alpha = require("alpha")
 		local dashboard = require("alpha.themes.dashboard")
 
+		-- Function to get buffer count (only listed buffers)
+		local function get_buffer_count()
+			local current_buf = vim.api.nvim_get_current_buf()
+			local buffers = vim.api.nvim_list_bufs()
+			local buf_count = 0
+			for _, buf in ipairs(buffers) do
+				if
+					buf ~= current_buf
+					and vim.api.nvim_buf_is_valid(buf)
+					and vim.api.nvim_buf_is_loaded(buf)
+					and vim.fn.buflisted(buf) == 1
+				then -- Only count listed buffers
+					buf_count = buf_count + 1
+				end
+			end
+			return buf_count
+		end
+
+		-- Function to build buttons dynamically
+		local function build_buttons()
+			local buttons = {
+				dashboard.button("e", "  New file", ":ene<CR>"),
+				dashboard.button("f", "  Find file", ":Telescope find_files<CR>"),
+				dashboard.button("r", "  Recent files", ":Telescope oldfiles<CR>"),
+				dashboard.button("g", "  Find text", ":Telescope live_grep<CR>"),
+				dashboard.button("c", "  Config", ":e $MYVIMRC<CR>"),
+				dashboard.button("q", "  Quit", ":qa<CR>"),
+				{ type = "padding", val = 1 },
+				dashboard.button("Q", "  Force Quit", ":qa!<CR>"),
+			}
+
+			-- Add buffer button dynamically
+			local buf_count = get_buffer_count()
+			if buf_count > 0 then
+				table.insert(
+					buttons,
+					1,
+					dashboard.button("b", "  Open Buffers (" .. buf_count .. ")", ":Telescope buffers<CR>")
+				)
+				table.insert(buttons, 2, { type = "padding", val = 1 })
+			end
+
+			return buttons
+		end
+
 		-- Function to interpolate between two colors
 		local function lerp_color(color1, color2, t)
 			local r1, g1, b1 =
@@ -69,15 +114,8 @@ return {
 
 		dashboard.section.header.opts.hl = highlights
 
-		-- Set menu
-		dashboard.section.buttons.val = {
-			dashboard.button("e", "  New file", ":ene<CR>"),
-			dashboard.button("f", "  Find file", ":Telescope find_files<CR>"),
-			dashboard.button("r", "  Recent files", ":Telescope oldfiles<CR>"),
-			dashboard.button("g", "  Find text", ":Telescope live_grep<CR>"),
-			dashboard.button("c", "  Config", ":e $MYVIMRC<CR>"),
-			dashboard.button("q", "  Quit", ":qa<CR>"),
-		}
+		-- Set initial buttons
+		dashboard.section.buttons.val = build_buttons()
 
 		-- Set footer
 		local function footer()
@@ -91,6 +129,15 @@ return {
 		dashboard.opts.opts = {
 			noautocmd = true,
 		}
+
+		-- Create autocmd to update buttons when alpha is displayed
+		vim.api.nvim_create_autocmd("User", {
+			pattern = "AlphaReady",
+			callback = function()
+				dashboard.section.buttons.val = build_buttons()
+				require("alpha").redraw()
+			end,
+		})
 
 		-- Send config to alpha
 		alpha.setup(dashboard.opts)
@@ -142,34 +189,33 @@ return {
 		end
 
 		-- Intercept <CR> in command mode to handle :q and :q!
-		vim.keymap.set('c', '<CR>', function()
+		vim.keymap.set("c", "<CR>", function()
 			local cmd = vim.fn.getcmdline()
-			if vim.fn.getcmdtype() == ':' then
-				if cmd == 'q' then
+			if vim.fn.getcmdtype() == ":" then
+				if cmd == "q" then
 					-- Clear command line and exit command mode
-					vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, true, true), 'n', false)
+					vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, true, true), "n", false)
 					vim.schedule(function()
 						local result = _G.smart_quit(0)
 						if result ~= "" then
 							vim.cmd(result)
 						end
 					end)
-					return ''
-				elseif cmd == 'q!' then
+					return ""
+				elseif cmd == "q!" then
 					-- Clear command line and exit command mode
-					vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, true, true), 'n', false)
+					vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, true, true), "n", false)
 					vim.schedule(function()
 						local result = _G.smart_quit(1)
 						if result ~= "" then
 							vim.cmd(result)
 						end
 					end)
-					return ''
+					return ""
 				end
 			end
 			-- Normal Enter behavior for everything else
-			return vim.api.nvim_replace_termcodes('<CR>', true, true, true)
+			return vim.api.nvim_replace_termcodes("<CR>", true, true, true)
 		end, { expr = true })
-
 	end,
 }
