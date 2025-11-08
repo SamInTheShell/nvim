@@ -115,118 +115,30 @@ return {
 		-- Disable folding on alpha buffer
 		vim.cmd([[autocmd FileType alpha setlocal nofoldenable]])
 
-		-- Custom quit function when nvim-tree is open
+		-- Custom quit behavior when nvim-tree is open
+		-- When tree is visible and user quits, show alpha welcome screen instead
 		_G.smart_quit = function(force)
-			-- Convert 0/1 to proper boolean (Lua treats 0 as truthy!)
-			force = (force ~= 0)
-			print("DEBUG: smart_quit called with force=" .. tostring(force))
-
 			local tree_visible = require("nvim-tree.view").is_visible()
-			print("DEBUG: tree_visible=" .. tostring(tree_visible))
 
 			-- Only apply custom behavior if nvim-tree is open
 			if not tree_visible then
-				print("DEBUG: Tree not visible, returning normal quit")
 				return force and "quit!" or "quit"
 			end
 
-			local current_buf = vim.api.nvim_get_current_buf()
-			local ft = vim.bo[current_buf].filetype
-			print("DEBUG: current_buf=" .. current_buf .. ", filetype=" .. ft)
+			local ft = vim.bo[vim.api.nvim_get_current_buf()].filetype
 
-			-- Don't intercept if we're in nvim-tree or alpha
+			-- Don't intercept quit in special buffers
 			if ft == "NvimTree" or ft == "alpha" then
-				print("DEBUG: In special buffer, returning normal quit")
 				return force and "quit!" or "quit"
 			end
 
-			-- Check if buffer has unsaved changes
-			local function has_unsaved_changes(buf)
-				-- DEBUG: Print buffer info
-				local bufname = vim.api.nvim_buf_get_name(buf)
-				local modified = vim.bo[buf].modified
-				local readable = vim.fn.filereadable(bufname)
-				local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
-				local line_count = #lines
-				local first_line = lines[1] or ""
+			-- Show alpha instead of quitting
+			vim.schedule(function()
+				require("alpha").start(false)
+			end)
 
-				print(string.format("DEBUG: buf=%d, name='%s', modified=%s, readable=%d, lines=%d, first='%s'",
-					buf, bufname, tostring(modified), readable, line_count, first_line))
-
-				-- Standard modified flag
-				if vim.bo[buf].modified then
-					print("DEBUG: Returning true - modified flag set")
-					return true
-				end
-
-				-- Check for buffers that don't exist on disk yet (unnamed or new files)
-				if bufname == "" or vim.fn.filereadable(bufname) == 0 then
-					-- File doesn't exist on disk - check if it has any content
-					-- If it has more than one line, or the first line isn't empty, it has content
-					if #lines > 1 or (#lines == 1 and lines[1] ~= "") then
-						print("DEBUG: Returning true - new file with content")
-						return true
-					end
-				end
-
-				print("DEBUG: Returning false - no unsaved changes detected")
-				return false
-			end
-
-			-- Get all listed buffers (excluding special buffers and current)
-			local buffers = vim.tbl_filter(function(buf)
-				return vim.api.nvim_buf_is_valid(buf)
-					and vim.bo[buf].buflisted
-					and vim.bo[buf].buftype == ""
-					and buf ~= current_buf
-			end, vim.api.nvim_list_bufs())
-
-			print("DEBUG: Found " .. #buffers .. " other buffers")
-
-			if #buffers > 0 then
-				print("DEBUG: Multiple buffers case - checking current buffer for changes")
-				-- Multiple buffers - check for unsaved changes BEFORE switching
-				if not force and has_unsaved_changes(current_buf) then
-					-- Has unsaved changes and not forced - show error, don't switch
-					vim.api.nvim_err_writeln("E37: No write since last change (add ! to override)")
-					return ""
-				else
-					-- Either forced or no unsaved changes - switch and delete
-					if force then
-						return "bp | bd! #"
-					else
-						return "bp | bd #"
-					end
-				end
-			else
-				print("DEBUG: Last buffer case")
-				-- No other buffers - last buffer case
-				if force then
-					print("DEBUG: Force delete last buffer")
-					-- :q! - force delete and show Alpha
-					vim.schedule(function()
-						vim.cmd("bdelete!")
-						require("alpha").start(true)
-					end)
-					return ""
-				else
-					print("DEBUG: Normal quit on last buffer - checking for changes")
-					-- :q - only delete if no unsaved changes, otherwise error
-					if has_unsaved_changes(current_buf) then
-						print("DEBUG: Last buffer has unsaved changes")
-						-- Show the standard Vim error
-						vim.api.nvim_err_writeln("E37: No write since last change (add ! to override)")
-						return ""
-					else
-						-- No unsaved changes, safe to delete and show Alpha
-						vim.schedule(function()
-							vim.cmd("bdelete")
-							require("alpha").start(true)
-						end)
-						return ""
-					end
-				end
-			end
+			-- Return empty string to cancel the quit command
+			return ""
 		end
 
 		-- Intercept <CR> in command mode to handle :q and :q!
@@ -259,41 +171,5 @@ return {
 			return vim.api.nvim_replace_termcodes('<CR>', true, true, true)
 		end, { expr = true })
 
-		-- Also handle :bd (buffer delete) when nvim-tree is open
-		vim.api.nvim_create_autocmd("BufDelete", {
-			callback = function(args)
-				-- Only apply custom behavior if nvim-tree is open
-				if not require("nvim-tree.view").is_visible() then
-					return
-				end
-
-				-- Check if the deleted buffer is a normal file buffer
-				if vim.bo[args.buf].buftype ~= "" then
-					return
-				end
-
-				vim.schedule(function()
-					-- Count normal windows
-					local normal_windows = vim.tbl_filter(function(win)
-						local buf = vim.api.nvim_win_get_buf(win)
-						local ft = vim.bo[buf].filetype
-						return ft ~= "NvimTree" and ft ~= "alpha"
-					end, vim.api.nvim_list_wins())
-
-					-- Get remaining buffers
-					local buffers = vim.tbl_filter(function(buf)
-						return vim.api.nvim_buf_is_valid(buf)
-							and vim.bo[buf].buflisted
-							and vim.bo[buf].buftype == ""
-							and buf ~= args.buf
-					end, vim.api.nvim_list_bufs())
-
-					-- If we have a normal window open but no buffers, show alpha
-					if #normal_windows > 0 and #buffers == 0 then
-						require("alpha").start(true)
-					end
-				end)
-			end,
-		})
 	end,
 }
