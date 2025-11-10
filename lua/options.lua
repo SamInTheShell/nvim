@@ -258,7 +258,13 @@ local function smart_H()
 	local top_line = vim.fn.line("w0")
 
 	if current_line == top_line then
-		vim.cmd("normal! " .. vim.keycode("<C-u>"))
+		-- Smooth scroll half page up
+		local cinnamon_ok, cinnamon = pcall(require, "cinnamon")
+		if cinnamon_ok then
+			cinnamon.scroll(vim.keycode("<C-u>"))
+		else
+			vim.cmd("normal! " .. vim.keycode("<C-u>"))
+		end
 	else
 		vim.cmd("normal! H")
 	end
@@ -269,7 +275,13 @@ local function smart_L()
 	local bottom_line = vim.fn.line("w$")
 
 	if current_line == bottom_line then
-		vim.cmd("normal! " .. vim.keycode("<C-d>"))
+		-- Smooth scroll half page down
+		local cinnamon_ok, cinnamon = pcall(require, "cinnamon")
+		if cinnamon_ok then
+			cinnamon.scroll(vim.keycode("<C-d>"))
+		else
+			vim.cmd("normal! " .. vim.keycode("<C-d>"))
+		end
 	else
 		vim.cmd("normal! L")
 	end
@@ -279,6 +291,25 @@ vim.keymap.set("n", "H", smart_H, { desc = "Move to top line or scroll half page
 vim.keymap.set("n", "L", smart_L, { desc = "Move to bottom line or scroll half page down" })
 vim.keymap.set("v", "H", smart_H, { desc = "Move to top line or scroll half page up" })
 vim.keymap.set("v", "L", smart_L, { desc = "Move to bottom line or scroll half page down" })
+
+-- Smooth scrolling for Ctrl+d and Ctrl+u
+vim.keymap.set({ "n", "v" }, "<C-d>", function()
+	local cinnamon_ok, cinnamon = pcall(require, "cinnamon")
+	if cinnamon_ok then
+		cinnamon.scroll("<C-d>")
+	else
+		vim.cmd("normal! " .. vim.keycode("<C-d>"))
+	end
+end, { desc = "Scroll half page down (smooth)" })
+
+vim.keymap.set({ "n", "v" }, "<C-u>", function()
+	local cinnamon_ok, cinnamon = pcall(require, "cinnamon")
+	if cinnamon_ok then
+		cinnamon.scroll("<C-u>")
+	else
+		vim.cmd("normal! " .. vim.keycode("<C-u>"))
+	end
+end, { desc = "Scroll half page up (smooth)" })
 
 -- Clear screen on exit
 vim.api.nvim_create_autocmd("VimLeave", {
