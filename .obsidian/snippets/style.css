@@ -1,0 +1,28 @@
+body {
+  /*
+    Properties available can be found here:
+    https://docs.obsidian.md/Reference/CSS+variables/CSS+variables
+
+    CSS colors can be found here:
+    https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/named-color
+  */
+
+  /* https://docs.obsidian.md/Reference/CSS+variables/Editor/Headings */
+  --h1-color: deeppink;
+  --h2-color: aqua;
+  --h3-color: tomato;
+  --h4-color: green;
+  --h5-color: yellow;
+  --h6-color: pink;
+
+  /* https://docs.obsidian.md/Reference/CSS+variables/Foundations/Colors */
+  --text-normal: #8e8e8e;
+
+  /* https://docs.obsidian.md/Reference/CSS+variables/Editor/Code */
+  --code-background: black;
+  --code-normal: #fff;
+
+  /* https://docs.obsidian.md/Reference/CSS+variables/Foundations/Typography */
+  --bold-color: #fff;
+  --italic-color: aqua;
+}
